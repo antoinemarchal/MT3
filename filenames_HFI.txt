@@ -17,5 +17,5 @@ HFI_SkyMap_100_2048_R2.00_halfmission-1.fits
 HFI_SkyMap_353_2048_R2.00_full.fits           
 HFI_SkyMap_857_2048_R2.00_halfmission-2.fits  
 HFI_SkyMap_100_2048_R2.00_halfmission-2.fits      
-HFI_SkyMap_353_2048_R2.00_halfmission-1.fits  
-
+HFI_SkyMap_353_2048_R2.00_halfmission-1.fits
+  
