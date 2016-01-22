@@ -4,13 +4,28 @@ import healpy as hp
 import matplotlib.pyplot as plt
 import math as ma
 
+import fonction as fct
 plt.ion()
-map = hp.read_map('maps_2015/HFI_SkyMap_100_2048_R2.00_full.fits')
-#map_size = hp.get_map_size(map)
-#hp.mollview(map, norm='hist')
-#print(hp.npix2nside(map_size))
 
-fwhm = np.radians(9.66/60)
-print fwhm
-map_gauss = hp.smoothing(map, fwhm)
-hp.mollview(map_gauss, norm='hist')
+unit_1 = open("filenames_HFI.txt")
+FWMH = np.loadtxt("FWMH_HFI.txt")
+i = 0
+for line in unit_1 :
+    fichier = "maps_2015/" + line.strip()
+    if "100" in fichier :
+        continue
+    if "143" in fichier :
+        j = 1
+    if "217" in fichier :
+        j = 2
+    if "353" in fichier :
+        j = 3
+    if "545" in fichier :
+        j = 4
+    if "857" in fichier :
+        j = 5
+
+    print j 
+    # map_gauss = fct.smooth(fichier, ma.sqrt(FWMH[0,1]**2 - FWMH[j,1]**2))
+    #i = i + 1
+
