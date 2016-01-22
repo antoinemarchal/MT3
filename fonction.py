@@ -7,7 +7,7 @@ def smooth(filename, fwhm) :
 	# print(hp.npix2nside(map_size))
 
         print fwhm
-	fwhm_rad = np.radians(fwhm/60)
+	fwhm_rad = np.radians(fwhm/60.)
 	print fwhm_rad
 	map_gauss = hp.smoothing(map, fwhm_rad)
 	#hp.mollview(map_gauss, norm='hist')
