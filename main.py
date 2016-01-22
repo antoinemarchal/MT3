@@ -1,11 +1,9 @@
-from astropy.io import fits as pf
-
+from astropy.io import fits as pyfits
 import numpy as np
+import healpy as hp
+import matplotlib.pyplot as plt
 
-filename = "maps_2015/HFI_SkyMap_100_2048_R2.00_full.fits"
-image = pf.open(filename)
-var = image[0].data
-print var
-#pf.info(filename) 
-#image, header = pf.getdata(filename,'image',header=True)
+plt.ion()
+map = hp.read_map('maps_2015/HFI_SkyMap_100_2048_R2.00_full.fits')
+hp.mollview(map, norm='hist')
 
