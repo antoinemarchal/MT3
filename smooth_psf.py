@@ -37,5 +37,5 @@ for line in unit_1 :
     path_1 = "map_smooth/"
     if os.path.isfile(path_1 + fichier[10:]) == 1 :
         os.remove(path_1 + fichier[10:])
-    hp.write_map("map_smooth/" + fichier[10:],map_smooth, extra_header=(header))
+    hp.write_map("maps_smooth/" + fichier[10:],map_smooth, extra_header=(header))
         
