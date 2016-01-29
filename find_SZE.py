@@ -21,7 +21,7 @@ FIXME information
 PSZ = "PSZ2v1.fits"
 GLON,GLAT = fct.coord_sz(PSZ)
 
-patch_size = 200 #FIXME
+patch_size = 2000 #FIXME
 
 w = wcs.WCS(naxis=2)
 w.wcs.crpix = [patch_size/2, patch_size/2] #FIXME +1 si 0 ou 1
