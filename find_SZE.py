@@ -9,7 +9,7 @@ import os
 import fonction as fct
 
 plt.ion()
-filename_smooth = "maps_smooth/HFI_SkyMap_143_2048_R2.00_full.fits"
+filename_smooth = "maps_smooth/HFI_SkyMap_857_2048_R2.00_full.fits"
 map_smooth,header = hp.read_map(filename_smooth,h=True)
 #hp.mollview(map_smooth, norm='hist')
 """
@@ -19,27 +19,36 @@ FIXME information
 
 """
 PSZ = "PSZ2v1.fits"
-RA,DEC = fct.coord_sz(PSZ)
+GLON,GLAT = fct.coord_sz(PSZ)
 
-p_size = 200 #FIXME
+patch_size = 200 #FIXME
 
 w = wcs.WCS(naxis=2)
-w.wcs.crpix = [p_size/2, p_size/2] #FIXME +1 si 0 ou 1
-w.wcs.crval = [RA[0],DEC[0]]
+w.wcs.crpix = [patch_size/2, patch_size/2] #FIXME +1 si 0 ou 1
+#w.wcs.crval = [GLON[0],GLAT[0]]
+w.wcs.crval = [121.1743 ,-21.5733]
 #map_size = hp.get_map_size(map_smooth)
 n_side   = hp.get_nside(map_smooth)
 #pix_size = ma.sqrt(4 * ma.pi / map_size) * 180. / ma.pi
 pix_size = ma.sqrt(hp.nside2pixarea(n_side, degrees=True))
 w.wcs.cdelt = np.array([-pix_size/2., pix_size/2.])        #FIXME
 # use a gnomonic projetion
-w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+w.wcs.ctype = ["GLON-TAN", "GLAT-TAN"]
 
 header = w.to_header()
 
-patch = np.zeros([p_size, p_size])
-grid  = np.indices([p_size, p_size])
-print grid
-print grid.shape
+patch   = np.zeros((patch_size, patch_size))
+new_map = patch
+xx, yy  = np.indices((patch_size, patch_size))
 
-p_RA, p_DEC = w.wcs_pix2world()
+patch_GLON, patch_GLAT = w.wcs_pix2world(xx, yy, 0)
+patch_PHI = patch_GLON * ma.pi / 180. 
+patch_THETA = patch_GLAT * ma.pi / 180.
+patch = hp.ang2pix(n_side,ma.pi / 2. - patch_THETA, patch_PHI)
+print patch
+new_map = map_smooth[patch]
+print new_map
+plt.imshow(new_map)
+
+
 
