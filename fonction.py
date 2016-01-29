@@ -13,3 +13,13 @@ def smooth(filename, fwhm) :
 	#hp.mollview(map_gauss, norm='hist')
 	print 'end of smooth'
 	return (map_gauss, header)
+
+def coord_sz(filename) :
+        import astropy.table as ta
+        import astropy.io.fits as af
+
+        cat = af.getdata(filename)
+        data = ta.Table(cat)
+        RA = data['RA']
+        DEC = data['DEC']
+        return (RA,DEC)
