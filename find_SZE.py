@@ -17,10 +17,10 @@ NAME,GLON,GLAT = fct.coord_sz(PSZ)
 new_map = [] #declare une liste
 
 unit_1 = open("filenames_HFI.txt")
-
+path_1 = "map_smooth/"
 for line in unit_1:
     filename_smooth = line.strip()
-    map_smooth,header = hp.read_map(filename_smooth,h=True)
+    map_smooth,header = hp.read_map(path_1 + filename_smooth[10:],h=True)
     new_map.append(fct.patch_map(map_smooth, patch_size, 121.1743, -21.5733))
     
 plt.imshow(new_map[0]) #voir dictionnaire
