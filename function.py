@@ -32,13 +32,13 @@ def coord_sz(filename) :
         DEC = data['DEC']
         return (RA,DEC)
     
-def patch_map(map_smooth, patch_size, GLON, GLAT) :
+def patch_map(map_smooth, patch_size, GLON, GLAT, n_source) :
         """------------------------------------------------------------
         -------------Creation of wcs objects for patch--------------
         ------------------------------------------------------------"""
         w = wcs.WCS(naxis=2)
         w.wcs.crpix = [patch_size/2, patch_size/2] #FIXME +1 si 0 ou 1
-        w.wcs.crval = [GLON[0],GLAT[0]]
+        w.wcs.crval = [GLON[n_source],GLAT[n_source]]
         n_side      = hp.get_nside(map_smooth)
         pix_size    = ma.sqrt(hp.nside2pixarea(n_side, degrees=True))
         w.wcs.cdelt = np.array([-pix_size/2., pix_size/2.])
