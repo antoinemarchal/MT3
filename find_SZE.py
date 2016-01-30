@@ -22,8 +22,8 @@ for line in unit_1:
     filename_smooth = line.strip()
     map_smooth,header = hp.read_map(filename_smooth,h=True)
     new_map.append(fct.patch_map(map_smooth, patch_size, GLON, GLAT, 0))
-
-plt.imshow(new_map[0])
+    
+plt.imshow(new_map[0]) #voir dictionnaire
 
 
 
