@@ -40,8 +40,13 @@ for line in unit_1 :
         map_smooth /= 2.27  # Jy to Tcmb convertion FIXME
 
     i = i + 1
-    path_1 = "map_smooth/"
+    path_1 = "maps_smooth/"
     if os.path.isfile(path_1 + fichier[10:]) == 1 :
         os.remove(path_1 + fichier[10:])
     hp.write_map("maps_smooth/" + fichier[10:],map_smooth, extra_header=(header))
         
+for line in unit_1 :
+    fichier = line.strip()
+    if "100" in fichier :
+        map,header = hp.read_map(filename,h=True)
+        hp.write_map("maps_smooth/" + fichier[10:],map, extra_header=(header))
