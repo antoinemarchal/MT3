@@ -8,6 +8,12 @@ import os
 import fonction as fct
 plt.ion()
 
+"""------------------------------------------------------------
+   ---Program : Convolution using smooth function of healy to
+                degraded HFI images of Planck before apply
+                linear combinaison to study SZ effect
+   ------------------------------------------------------------"""
+   
 unit_1 = open("filenames_HFI.txt")
 FWMH = np.loadtxt("FWMH_HFI.txt")
 i = 0
@@ -29,9 +35,9 @@ for line in unit_1 :
     map_smooth, header = fct.smooth(fichier, ma.sqrt(FWMH[0,1]**2 - FWMH[j,1]**2))
     
     if "545" in fichier :
-        map_smooth /= 58.04
+        map_smooth /= 58.04 # Jy to Tcmb convertion FIXME
     if "857" in fichier : 
-        map_smooth /= 2.27
+        map_smooth /= 2.27  # Jy to Tcmb convertion FIXME
 
     i = i + 1
     path_1 = "map_smooth/"
