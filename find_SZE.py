@@ -11,7 +11,7 @@ plt.ion()
 
 patch_size = 100 #FIXME
 PSZ = "PSZ2v1.fits"
-GLON,GLAT = fct.coord_sz(PSZ)
+NAME,GLON,GLAT = fct.coord_sz(PSZ)
 #w.wcs.crval = [121.1743 ,-21.5733]
 
 new_map = [] #declare une liste
