@@ -14,7 +14,7 @@ PSZ = "PSZ2v1.fits"
 GLON,GLAT = fct.coord_sz(PSZ)
 #w.wcs.crval = [121.1743 ,-21.5733]
 
-new_map = [] # déclare une liste
+new_map = [] #declare une liste
 
 unit_1 = open("filenames_HFI.txt")
 for i, line in enumerate(unit_1) :
