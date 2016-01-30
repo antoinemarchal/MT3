@@ -21,7 +21,7 @@ PSZ = "PSZ2v1.fits"
 GLON,GLAT = fct.coord_sz(PSZ)
 #w.wcs.crval = [121.1743 ,-21.5733]
 
-new_map = fct.patch_map(map_smooth, patch_size, GLON, GLAT)
+new_map = fct.patch_map(map_smooth, patch_size, GLON, GLAT, 0)
 
 plt.imshow(new_map)
 
