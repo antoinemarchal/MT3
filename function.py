@@ -20,25 +20,28 @@ def smooth(filename, fwhm) :
         map_gauss = hp.smoothing(map, fwhm_rad)
         #hp.mollview(map_gauss, norm='hist')
         print 'end of smooth'
+
         return (map_gauss, header)
 
 def coord_sz(filename) :
-        import astropy.table as ta
-        import astropy.io.fits as af
+        import astropy.table as pytabs
+        #import astropy.io.fits as af
         
-        cat = af.getdata(filename)
-        data = ta.Table(cat)
-        RA = data['RA']
-        DEC = data['DEC']
-        return (RA,DEC)
+        cat  = pyfits.getdata(filename)
+        data = pytabs.Table(cat)
+        NAME = data['NAME']
+        RA   = data['RA']
+        DEC  = data['DEC']
+
+        return (NAME,RA,DEC)
     
-def patch_map(map_smooth, patch_size, GLON, GLAT, n_source) :
+def patch_map(map_smooth, patch_size, GLON, GLAT) :
         """------------------------------------------------------------
         -------------Creation of wcs objects for patch--------------
         ------------------------------------------------------------"""
-        w = wcs.WCS(naxis=2)
+        w           = wcs.WCS(naxis=2)
         w.wcs.crpix = [patch_size/2, patch_size/2] #FIXME +1 si 0 ou 1
-        w.wcs.crval = [GLON[n_source],GLAT[n_source]]
+        w.wcs.crval = [GLON,GLAT]
         n_side      = hp.get_nside(map_smooth)
         pix_size    = ma.sqrt(hp.nside2pixarea(n_side, degrees=True))
         w.wcs.cdelt = np.array([-pix_size/2., pix_size/2.])
