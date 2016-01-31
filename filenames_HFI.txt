@@ -1,3 +1,4 @@
+maps_2015/HFI_SkyMap_100_2048_R2.00_full.fits
 maps_2015/HFI_SkyMap_100_2048_R2.00_full.fits2
 maps_2015/HFI_SkyMap_100_2048_R2.00_halfmission-1.fits
 maps_2015/HFI_SkyMap_100_2048_R2.00_halfmission-2.fits
