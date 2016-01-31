@@ -77,6 +77,6 @@ def fact_SZE(nu) :
         import astropy.units as u
         from astropy.constants import G, h, k_B
         from astropy.cosmology import FLRW
-        x = h * nu / k_B / 3700. #FIXME
+        x = u.h * nu / u.k_B / 3700. #FIXME
         f = x * ((ma.exp(x) + 1.) / (ma.exp(x) - 1.)) - 4.
         return f
