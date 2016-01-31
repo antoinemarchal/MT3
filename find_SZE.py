@@ -27,7 +27,7 @@ for line in unit_1:
         (filename_smooth[21:24], fct.patch_map(map_smooth, patch_size,
             GLON[0], GLAT[0]))
         )
-    f_nu.append()
+    f_nu.append(fact_SZE(patch_map[][0]))
 #plt.imshow(patch_map[0][1]) 
 #    patch_map["" + filename_smooth[21:24]] = fct.patch_map(map_smooth, patch_size, GLON[0], GLAT[0])
 #plt.imshow(patch_map[0])
