@@ -14,7 +14,8 @@ PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT = fct.coord_SZ(PSZ)
 #test for andromeda galaxy [121.1743 ,-21.5733]
 
-patch_map = [] 
+patch_map = []
+f_nu      = [] 
 #patch_map = {}
 
 unit_1 = open("filenames_HFI.txt")
@@ -26,10 +27,9 @@ for line in unit_1:
         (filename_smooth[21:24], fct.patch_map(map_smooth, patch_size,
             GLON[0], GLAT[0]))
         )
+    f_nu.append()
 #plt.imshow(patch_map[0][1]) 
 #    patch_map["" + filename_smooth[21:24]] = fct.patch_map(map_smooth, patch_size, GLON[0], GLAT[0])
 #plt.imshow(patch_map[0])
 
-f_nu = []
-for line in patch_map
-    f_nu.append(2.)  
+
