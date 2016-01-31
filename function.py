@@ -74,7 +74,14 @@ def patch_map(map_smooth, patch_size, GLON, GLAT) :
         return new_map
 
 def fact_SZE(nu) :
+        import astropy.units as u
         from astropy import constants as const
-        x = const.h * nu / const.k_B / 3700. #FIXME
-        f = x * ((ma.exp(x) + 1.) / (ma.exp(x) - 1.)) - 4.
+        x = const.h * nu * u.Hz / const.k_B / (3700. * u.K) #FIXME
+        f = x * ((np.exp(x) + 1.) / (np.exp(x) - 1.)) - 4.
         return f
+
+
+
+
+
+
