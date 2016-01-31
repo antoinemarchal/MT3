@@ -73,7 +73,7 @@ def patch_map(map_smooth, patch_size, GLON, GLAT) :
         new_map = map_smooth[patch]
         return new_map
 
-    def fact_SZE(nu) :
+def fact_SZE(nu) :
         import astropy.units as u
         from astropy.constants import G, h, k_B
         from astropy.cosmology import FLRW
