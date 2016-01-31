@@ -1,33 +1,56 @@
 from astropy.io import fits as pyfits
-from astropy import wcs 
+from astropy import wcs
+import astropy.table as pytabs
 import numpy as np
 import healpy as hp
 import matplotlib.pyplot as plt
 import math as ma
 import os
-
 plt.ion()
 
 def smooth(filename, fwhm) :
+        """-------------------------------------------------
+        --- smooth : Convuluted form by a gaussian.
+                        
+                     Parameters : filename  = adress of map
+                                     
+                     Return     : map_gauss = convoluted map
+                                  header
+        ----------------------------------------------------"""
         map,header = hp.read_map(filename,h=True)
         fwhm_rad = np.radians(fwhm/60.)
         map_gauss = hp.smoothing(map, fwhm_rad)
         return (map_gauss, header)
 
-def coord_sz(filename) :
-        import astropy.table as pytabs
-        #import astropy.io.fits as af
-        
+def coord_SZ(filename) :
+        """-------------------------------------------------
+        --- coord_SZ : Getting back useful information of
+                       galaxy cluster in SZ catalog 
+                        
+                       Parameters : filename  = .fits file
+                                     
+                       Return     : NAME = convoluted map
+                                  GLON = galactic longitude
+                                  GLAT = galactic latitude
+        ----------------------------------------------------"""
         cat  = pyfits.getdata(filename)
         data = pytabs.Table(cat)
         NAME = data['NAME']
-        RA   = data['RA']
-        DEC  = data['DEC']
-        return (NAME,RA,DEC)
+        GLON = data['GLON']
+        GLAT = data['GLAT']
+        return (NAME,GLON,GLAT)
     
 def patch_map(map_smooth, patch_size, GLON, GLAT) :
         """------------------------------------------------------------
-        -------------Creation of wcs objects for patch--------------
+        --- patch_map : Initiate the WCS object and return a piece of
+                        Planck map centred on a given coordonates
+                        using a gnomonic projection.
+                        
+                        Parameters : GLON       = galactic longitude
+                                     GLAT       = galactic latitude
+                                     patch_size = #FIXME dimension
+
+                        Return     : new_map (2D), D = patch_size
         ------------------------------------------------------------"""
         w           = wcs.WCS(naxis=2)
         w.wcs.crpix = [patch_size/2, patch_size/2] #FIXME +1 si 0 ou 1
@@ -35,7 +58,7 @@ def patch_map(map_smooth, patch_size, GLON, GLAT) :
         n_side      = hp.get_nside(map_smooth)
         pix_size    = ma.sqrt(hp.nside2pixarea(n_side, degrees=True))
         w.wcs.cdelt = np.array([-pix_size/2., pix_size/2.])
-        w.wcs.ctype = ["GLON-TAN", "GLAT-TAN"]     # use a gnomonic projetion
+        w.wcs.ctype = ["GLON-TAN", "GLAT-TAN"] 
     
         header = w.to_header() #FIXME
     

@@ -11,10 +11,10 @@ plt.ion()
 
 patch_size = 2000 #FIXME
 PSZ = "PSZ2v1.fits"
-NAME,GLON,GLAT = fct.coord_sz(PSZ)
+NAME,GLON,GLAT = fct.coord_SZ(PSZ)
 #test for andromeda galaxy [121.1743 ,-21.5733]
 
-new_map = [] #declare une liste
+new_map = [] 
 
 unit_1 = open("filenames_HFI.txt")
 path_1 = "maps_smooth/"
