@@ -74,9 +74,7 @@ def patch_map(map_smooth, patch_size, GLON, GLAT) :
         return new_map
 
 def fact_SZE(nu) :
-        import astropy.units as u
-        from astropy.constants import G, h, k_B
-        from astropy.cosmology import FLRW
-        x = u.h * nu / u.k_B / 3700. #FIXME
+        from astropy import constants as const
+        x = const.h * nu / const.k_B / 3700. #FIXME
         f = x * ((ma.exp(x) + 1.) / (ma.exp(x) - 1.)) - 4.
         return f
