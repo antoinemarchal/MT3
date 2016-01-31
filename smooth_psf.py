@@ -48,5 +48,5 @@ for line in unit_1 :
 for line in unit_1 :
     fichier = line.strip()
     if "100" in fichier :
-        map,header = hp.read_map(filename,h=True)
+        map,header = hp.read_map(fichier,h=True)
         hp.write_map("maps_smooth/" + fichier[10:],map, extra_header=(header))
