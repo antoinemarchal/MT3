@@ -85,7 +85,7 @@ def fact_SZE(nu) :
         --------------------------------------------------------"""
         import astropy.units as u
         from astropy import constants as const
-        x = const.h * nu * u.GHz / const.k_B / (3700. * u.K) #FIXME Tcmb
+        x = const.h * nu * u.GHz / const.k_B / (2. * u.K) #FIXME Tcmb
         #Tcmb 0 or recombinaison ?
         f = x * ((np.exp(x) + 1.) / (np.exp(x) - 1.)) - 4.
         return f
