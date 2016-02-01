@@ -34,9 +34,13 @@ for line in unit_1:
     SZ_map.append((a_t * inv_cov[i] / a_t / inv_cov[i] / a) * patch_map[i])
     i += 1
     
-plt.imshow(SZ_map[4])
+#plt.imshow(SZ_map[4])
 #plt.imshow(inv_cov[0])
 
 #f_nu = fct.fact_SZE(freq) 
 
-    
+final_map = np.zeros((patch_size, patch_size))
+for i in range(5) :
+    final_map = final_map + SZ_map[i]
+
+#plt.imshow(final_map)
