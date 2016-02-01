@@ -21,11 +21,12 @@ TSZ_map       = []
 CMB_KSZ_map   = []
 patch_map     = []
 inv_cov       = []
-freq          = [100, 143, 217, 353, 545, 857]
+freq          = [100., 143., 217., 353., 545., 857.]
 
 w             = []
 
 f_nu          = fct.fact_SZE(freq)
+print f_nu
 
 unit_1 = open("files_HFI_full.txt")
 path_1 = "maps_smooth/"
