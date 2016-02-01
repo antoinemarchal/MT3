@@ -41,7 +41,7 @@ def coord_SZ(filename) :
         return (NAME,GLON,GLAT)
     
 def patch_map(map_smooth, patch_size, GLON, GLAT) :
-        """------------------------------------------------------------
+        """---------------------------------------------------------
         --- patch_map : Initiate the WCS object and return a piece of
                         Planck map centred on a given coordonates
                         using a gnomonic projection.
@@ -85,7 +85,7 @@ def fact_SZE(nu) :
         --------------------------------------------------------"""
         import astropy.units as u
         from astropy import constants as const
-        x = const.h * nu * u.GHz / const.k_B / (2. * u.K) #FIXME Tcmb
+        x = const.h * nu * u.GHz / const.k_B / (2.7 * u.K) #FIXME Tcmb
         #Tcmb 0 or recombinaison ?
         f = x * ((np.exp(x) + 1.) / (np.exp(x) - 1.)) - 4.
         return f
