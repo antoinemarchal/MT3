@@ -74,9 +74,16 @@ def patch_map(map_smooth, patch_size, GLON, GLAT) :
         return new_map
 
 def fact_SZE(nu) :
+        """----------------------------------------------------
+        --- fact_SZE : Getting back the factor f(nu) 
+                        
+                       Parameters : nu  = frequency in GHz
+                                     
+                       Return     : f   = adimenssionless factor
+        --------------------------------------------------------"""
         import astropy.units as u
         from astropy import constants as const
-        x = const.h * nu * u.GHz / const.k_B / (3700. * u.K) #FIXME
+        x = const.h * nu * u.GHz / const.k_B / (3700. * u.K) #FIXME Tcmb
         f = x * ((np.exp(x) + 1.) / (np.exp(x) - 1.)) - 4.
         return f
 
