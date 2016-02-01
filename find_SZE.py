@@ -14,8 +14,8 @@ PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT = fct.coord_SZ(PSZ)
 #test for andromeda galaxy [121.1743 ,-21.5733]
 
-a             = np.ones(patch_size)
-a_t           = np.transpose(a)
+a             = np.ones(patch_size) #FIXME
+a_t           = np.transpose(a)     #FIXME
 
 TSZ_map       = []
 CMB_KSZ_map   = []
@@ -38,11 +38,11 @@ for line in unit_1:
         (fct.patch_map(map_smooth, patch_size, GLON[0], GLAT[0]))
         )
 
-    b   = [f_nu[i]] * patch_size
-    b_t = np.transpose(b)
+    b   = [f_nu[i]] * patch_size #FIXME is it f(nu) value
+    b_t = np.transpose(b)        #FIXME  
     
-    inv_cov.append(np.linalg.inv(np.cov(patch_map[i]))) #FIXME
-    w.append( (((a_t*inv_cov[i]*a)*b_t*inv_cov[i])- 
+    inv_cov.append(np.linalg.inv(np.cov(patch_map[i]))) #FIXME to high
+    w.append( (((a_t*inv_cov[i]*a)*b_t*inv_cov[i])-     #FIXME nan
               ((b_t*inv_cov[i]*a)*a_t*inv_cov[i])) / 
               ((b_t*inv_cov[i]*b)*(a_t*inv_cov[i]*a)-(b_t*inv_cov[i]*a)**2)
     )
