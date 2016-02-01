@@ -41,8 +41,8 @@ for line in unit_1:
     b_t = np.transpose(b)
     
     inv_cov.append(np.linalg.inv(np.cov(patch_map[i]))) #FIXME
-    w.append( (((a_t*inv_cov[i]*a)*b_t*inv_cov[i])- \
-              ((b_t*inv_cov[i]*a)*a_t*inv_cov[i])) / \
+    w.append( (((a_t*inv_cov[i]*a)*b_t*inv_cov[i])- 
+              ((b_t*inv_cov[i]*a)*a_t*inv_cov[i])) / 
               ((b_t*inv_cov[i]*b)*(a_t*inv_cov[i]*a)-(b_t*inv_cov[i]*a)**2)
     )
     print w[i]

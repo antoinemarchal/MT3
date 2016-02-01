@@ -54,6 +54,7 @@ def patch_map(map_smooth, patch_size, GLON, GLAT) :
         ------------------------------------------------------------"""
         w           = wcs.WCS(naxis=2)
         w.wcs.crpix = [patch_size/2, patch_size/2] #FIXME +1 si 0 ou 1
+        # Fortran or C convention ?
         w.wcs.crval = [GLON,GLAT]
         n_side      = hp.get_nside(map_smooth)
         pix_size    = ma.sqrt(hp.nside2pixarea(n_side, degrees=True))
@@ -67,10 +68,11 @@ def patch_map(map_smooth, patch_size, GLON, GLAT) :
         xx, yy  = np.indices((patch_size, patch_size))
     
         patch_GLON, patch_GLAT = w.wcs_pix2world(xx, yy, 0)
-        patch_PHI = patch_GLON * ma.pi / 180. 
-        patch_THETA = patch_GLAT * ma.pi / 180.
-        patch = hp.ang2pix(n_side,ma.pi / 2. - patch_THETA, patch_PHI)
-        new_map = map_smooth[patch]
+        patch_PHI              = patch_GLON * ma.pi / 180. 
+        patch_THETA            = patch_GLAT * ma.pi / 180.
+        patch                  = hp.ang2pix(n_side,ma.pi / 2. -
+                                            patch_THETA, patch_PHI)
+        new_map                = map_smooth[patch]
         return new_map
 
 def fact_SZE(nu) :
@@ -84,6 +86,7 @@ def fact_SZE(nu) :
         import astropy.units as u
         from astropy import constants as const
         x = const.h * nu * u.GHz / const.k_B / (3700. * u.K) #FIXME Tcmb
+        #Tcmb 0 or recombinaison ?
         f = x * ((np.exp(x) + 1.) / (np.exp(x) - 1.)) - 4.
         return f
 
