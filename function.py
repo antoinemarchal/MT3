@@ -23,16 +23,16 @@ def smooth(filename, fwhm) :
         return (map_gauss, header)
 
 def coord_SZ(filename) :
-        """-------------------------------------------------
+        """--------------------------------------------------
         --- coord_SZ : Getting back useful information of
                        galaxy cluster in SZ catalog 
                         
                        Parameters : filename  = .fits file
                                      
                        Return     : NAME = convoluted map
-                                  GLON = galactic longitude
-                                  GLAT = galactic latitude
-        ----------------------------------------------------"""
+                                    GLON = galactic longitude
+                                    GLAT = galactic latitude
+        -----------------------------------------------------"""
         cat  = pyfits.getdata(filename)
         data = pytabs.Table(cat)
         NAME = data['NAME']
