@@ -9,14 +9,18 @@ import os
 import function as fct
 plt.ion()
 
-patch_size = 400 
+patch_size = 200 
 PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT = fct.coord_SZ(PSZ)
 #test for andromeda galaxy [121.1743 ,-21.5733]
 
+n_id          = 22
 n_obs         = 6
+FWHM          = np.loadtxt("FWMH_HFI.txt")
+freq          = []
+for i in range(n_obs):
+    freq.append(FWHM[i,0])
 
-freq          = [100. ,143. ,217. , 353. ,545. ,857.]
 patch_map     = []
 
 w_t           = []
@@ -35,41 +39,35 @@ for line in unit_1:
     filename_smooth = line.strip()
     map_smooth,header = hp.read_map(path_1 + filename_smooth[10:],h=True)
     patch_map.append(
-        (fct.patch_map(map_smooth, patch_size, GLON[20], GLAT[20]))
+        (fct.patch_map(map_smooth, patch_size, GLON[n_id], GLAT[n_id]))
         ) 
     i += 1
 
+#FIXME with n_obs
 E = np.cov((patch_map[0].flatten(), patch_map[1].flatten(),
               patch_map[2].flatten(), patch_map[3].flatten(),
               patch_map[4].flatten(), patch_map[5].flatten()))
-
 R = np.linalg.inv(E)
 
-g_1 = np.dot(np.dot(b_t,R),b) * (np.dot(a_t,R))
-g_2 = np.dot(np.dot(a_t,R),b) * (np.dot(b_t,R))
-g_3 = np.dot(np.dot(a_t,R),b) * np.dot(np.dot(b_t,R),b)
-g_4 = np.dot(np.dot(a_t,R),b)**2
-
-f_1 = np.dot(np.dot(a_t,R),a) * (np.dot(b_t,R))
-f_2 = np.dot(np.dot(b_t,R),a) * (np.dot(a_t,R))
-f_3 = np.dot(np.dot(b_t,R),b) * np.dot(np.dot(a_t,R),a)
-f_4 = np.dot(np.dot(b_t,R),a)**2
-
-w_k = (g_1 - g_2) / (g_3 - g_4)
-w_t = (f_1 - f_2) / (f_3 - f_4)
+(w_k, w_t) = fct.weight(R, a, a_t, b ,b_t)
 
 CMB_KSZ_map   = np.zeros((patch_size, patch_size))
 TSZ_map       = np.zeros((patch_size, patch_size))
 
-for i in range(n_obs-1) :
+for i in range(n_obs) :
     CMB_KSZ_map = CMB_KSZ_map + (w_k[i] * patch_map[i])
     TSZ_map     = TSZ_map     + (w_t[i] * patch_map[i])
 
+"""---------------------Plot CMB+KSZ and TSZ-------------------------"""
+plt.suptitle(NAME[n_id], size=16)
+
 plt.subplot(1,2,1)
 plt.imshow(TSZ_map)
+plt.title('TSZ map')
+
 plt.subplot(1,2,2)
 plt.imshow(CMB_KSZ_map)
-
+plt.title('CMB+KSZ map')
 
 
 
