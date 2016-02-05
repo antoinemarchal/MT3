@@ -4,15 +4,19 @@ import numpy as np
 import healpy as hp
 import matplotlib.pyplot as plt
 import math as ma
+import pickle
+import sys
 import os
 
 import function as fct
 plt.ion()
 
-patch_size = 100 
+patch_size = 4 
 PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT = fct.coord_SZ(PSZ)
-#test for andromeda galaxy [121.1743 ,-21.5733]
+
+n_cluster     = 100
+st_w          = []
 
 n_id          = 20
 n_obs         = 6
@@ -21,45 +25,23 @@ freq          = []
 for i in range(n_obs):
     freq.append(FWHM[i,0])
 
-patch_map     = []
-
-w_t           = []
-f_nu          = fct.dist_SZ(freq)
-
-a             = np.ones(n_obs)
-a_t           = np.transpose(a)
-b             = np.ones(n_obs)
-b             = f_nu
-b_t           = np.transpose(b)
-
 unit_1 = open("files_HFI_full.txt")
-path_1 = "maps_smooth/"
-i = 0
-for line in unit_1:
-    filename_smooth = line.strip()
-    map_smooth,header = hp.read_map(path_1 + filename_smooth[10:],h=True)
-    patch_map.append(
-        (fct.patch_map(map_smooth, patch_size, GLON[n_id], GLAT[n_id]))
-        ) 
-    i += 1
+origin = unit_1.tell()
 
-#FIXME with n_obs
-E = np.cov((patch_map[0].flatten(), patch_map[1].flatten(),
-              patch_map[2].flatten(), patch_map[3].flatten(),
-              patch_map[4].flatten(), patch_map[5].flatten()))
-R = np.linalg.inv(E)
+for k in range(n_cluster):
+    CMB_KSZ_map, TSZ_map, w_t, w_k = fct.separation(k, unit_1, origin
+                                , patch_size, NAME, GLON, GLAT, freq)
+    fct.save_fits(NAME[k], TSZ_map)
 
-(w_k, w_t) = fct.weight(R, a, a_t, b ,b_t)
+#st_w.append(w_t)
 
-CMB_KSZ_map   = np.zeros((patch_size, patch_size))
-TSZ_map       = np.zeros((patch_size, patch_size))
+#with open('output.dat', 'wb') as output:
+#    mon_pickler = pickle.Pickler(output)
+#    mon_pickler.dump(st_w)
 
-for i in range(n_obs) :
-    CMB_KSZ_map = CMB_KSZ_map + (w_k[i] * patch_map[i])
-    TSZ_map     = TSZ_map     + (w_t[i] * patch_map[i])
-
-"""---------------------Plot CMB+KSZ and TSZ-------------------------"""
-plt.suptitle(NAME[n_id], size=16)
+sys.exit('stop')
+#"""---------------Plot CMB+KSZ and TSZ--------------"""
+plt.suptitle(NAME[22], size=16)
 
 plt.subplot(1,2,1)
 plt.imshow(TSZ_map, origin='lower', interpolation='none')
@@ -68,6 +50,8 @@ plt.title('TSZ map')
 plt.subplot(1,2,2)
 plt.imshow(CMB_KSZ_map, origin='lower', interpolation='none')
 plt.title('CMB+KSZ map')
+        
+    
 
 
 

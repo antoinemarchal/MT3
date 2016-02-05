@@ -1,4 +1,5 @@
 from astropy.io import fits as pyfits
+import pyfits as pf
 from astropy import wcs
 import astropy.table as pytabs
 import numpy as np
@@ -6,6 +7,7 @@ import healpy as hp
 import matplotlib.pyplot as plt
 import math as ma
 import os
+import function as fct
 plt.ion()
 
 def smooth(filename, fwhm):
@@ -53,8 +55,7 @@ def patch_map(map_smooth, patch_size, GLON, GLAT):
                         Return     : new_map (2D), D = patch_size
         ------------------------------------------------------------"""
         w           = wcs.WCS(naxis=2)
-        w.wcs.crpix = [patch_size/2, patch_size/2] #FIXME +1 si 0 ou 1
-        # Fortran or C convention ?
+        w.wcs.crpix = [patch_size/2, patch_size/2]
         w.wcs.crval = [GLON,GLAT]
         n_side      = hp.get_nside(map_smooth)
         pix_size    = ma.sqrt(hp.nside2pixarea(n_side, degrees=True))
@@ -85,8 +86,7 @@ def dist_SZ(nu):
         --------------------------------------------------------"""
         import astropy.units as u
         from astropy import constants as const
-        x = const.h * nu * u.GHz / const.k_B / ( 2.7 * u.K) #FIXME Tcmb
-        #more precision
+        x = const.h * nu * u.GHz / const.k_B / ( 2.725 * u.K)
         f = x * ((np.exp(x) + 1.) / (np.exp(x) - 1.)) - 4.
         return f
 
@@ -114,8 +114,60 @@ def weight(R, a, a_t, b, b_t):
         f_3 = np.matmul(np.matmul(b_t,R),b) * np.matmul(np.matmul(a_t,R),a)
         f_4 = np.matmul(np.matmul(b_t,R),a)**2
 
-        w_k = (g_1 - g_2) / (g_3 - g_4)
-        w_t = (f_1 - f_2) / (f_3 - f_4)
+        w_k   = (g_1 - g_2) / (g_3 - g_4)
+        w_t   = (f_1 - f_2) / (f_3 - f_4)
         return (w_k, w_t)
 
+def separation(k, unit_1, origin, patch_size, NAME, GLON, GLAT, freq):
+        """------------------------------------------------------------
+        --- separation :  
+                        
+                         Parameters : FIXME
+
+                         Return     : w_k    = weight vector of CMB+KSZ 
+                                           map
+                                      w_t    = weight vector of TSZ map
+        ---------------------------------------------------------------"""
+        n_obs         = 6
+        f_nu          = fct.dist_SZ(freq)
+
+        a             = np.ones(n_obs)
+        a_t           = np.transpose(a)
+        b             = np.ones(n_obs)
+        b             = f_nu
+        b_t           = np.transpose(b)
+        
+        patch_map     = []
+        unit_1.seek(origin)
+        path_1 = "maps_smooth/"
+        for line in unit_1:
+            filename_smooth = line.strip()
+            map_smooth,header = hp.read_map(path_1 + filename_smooth[10:],h=True)
+            patch_map.append(
+                    (fct.patch_map(map_smooth, patch_size, GLON[k], GLAT[k]))
+            ) 
+            
+        E = np.cov((patch_map[0].flatten(), patch_map[1].flatten(),
+                    patch_map[2].flatten(), patch_map[3].flatten(),
+                    patch_map[4].flatten(), patch_map[5].flatten()))
+        R = np.linalg.inv(E)
+        
+        w_k, w_t = fct.weight(R, a, a_t, b ,b_t)
+        
+        CMB_KSZ_map   = np.zeros((patch_size, patch_size))
+        TSZ_map       = np.zeros((patch_size, patch_size))
+        KSZ_map       = np.zeros((patch_size, patch_size))
+        
+        for i in range(n_obs) :
+            CMB_KSZ_map = CMB_KSZ_map + (w_k[i]    * patch_map[i])
+            TSZ_map     = TSZ_map     + (w_t[i]    * patch_map[i])
+        return (CMB_KSZ_map, TSZ_map, w_t, w_k)
+
+def save_fits(name, patch):
+        path = "patch_SZ/SZ/"
+        filename = path + name + ".fits"
+        if os.path.isfile(filename) == 1:
+            os.remove(filename)    
+        pf.writeto(filename, patch)
+        return()
 
