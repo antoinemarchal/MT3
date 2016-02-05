@@ -163,11 +163,11 @@ def separation(k, unit_1, origin, patch_size, NAME, GLON, GLAT, freq):
             TSZ_map     = TSZ_map     + (w_t[i]    * patch_map[i])
         return (CMB_KSZ_map, TSZ_map, w_t, w_k)
 
-def save_fits(name, patch):
+def save_fits(name, patch,indice):
         path = "patch_SZ/SZ/"
-        filename = path + name + ".fits"
+        filename = path + str(indice)+'_' + name + ".fits"
         if os.path.isfile(filename) == 1:
             os.remove(filename)    
-        pf.writeto(filename, patch)
-        return()
+        pf.writeto(filename, patch.value)
+        return 0
 
