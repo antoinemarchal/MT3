@@ -9,12 +9,12 @@ import os
 import function as fct
 plt.ion()
 
-patch_size = 200 
+patch_size = 100 
 PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT = fct.coord_SZ(PSZ)
 #test for andromeda galaxy [121.1743 ,-21.5733]
 
-n_id          = 22
+n_id          = 20
 n_obs         = 6
 FWHM          = np.loadtxt("FWMH_HFI.txt")
 freq          = []
@@ -24,7 +24,7 @@ for i in range(n_obs):
 patch_map     = []
 
 w_t           = []
-f_nu          = fct.fact_SZE(freq)
+f_nu          = fct.dist_SZ(freq)
 
 a             = np.ones(n_obs)
 a_t           = np.transpose(a)
@@ -62,11 +62,11 @@ for i in range(n_obs) :
 plt.suptitle(NAME[n_id], size=16)
 
 plt.subplot(1,2,1)
-plt.imshow(TSZ_map)
+plt.imshow(TSZ_map, origin='lower', interpolation='none')
 plt.title('TSZ map')
 
 plt.subplot(1,2,2)
-plt.imshow(CMB_KSZ_map)
+plt.imshow(CMB_KSZ_map, origin='lower', interpolation='none')
 plt.title('CMB+KSZ map')
 
 

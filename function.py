@@ -48,7 +48,7 @@ def patch_map(map_smooth, patch_size, GLON, GLAT):
                         
                         Parameters : GLON       = galactic longitude
                                      GLAT       = galactic latitude
-                                     patch_size = #FIXME dimension
+                                     patch_size = number of pixel
 
                         Return     : new_map (2D), D = patch_size
         ------------------------------------------------------------"""
@@ -75,7 +75,7 @@ def patch_map(map_smooth, patch_size, GLON, GLAT):
         new_map                = map_smooth[patch]
         return new_map
 
-def fact_SZE(nu):
+def dist_SZ(nu):
         """----------------------------------------------------
         --- fact_SZE : Getting back the factor f(nu) 
                         
@@ -104,15 +104,15 @@ def weight(R, a, a_t, b, b_t):
                                            map
                                   w_t    = weight vector of TSZ map
         -----------------------------------------------------------"""
-        g_1 = np.dot(np.dot(b_t,R),b) * (np.dot(a_t,R))
-        g_2 = np.dot(np.dot(a_t,R),b) * (np.dot(b_t,R))
-        g_3 = np.dot(np.dot(a_t,R),b) * np.dot(np.dot(b_t,R),b)
-        g_4 = np.dot(np.dot(a_t,R),b)**2
+        g_1 = np.matmul(np.matmul(b_t,R),b) * (np.matmul(a_t,R))
+        g_2 = np.dot(np.matmul(a_t,R),b) * (np.matmul(b_t,R))
+        g_3 = np.matmul(np.matmul(a_t,R),b) * np.matmul(np.matmul(b_t,R),b)
+        g_4 = np.matmul(np.matmul(a_t,R),b)**2
 
-        f_1 = np.dot(np.dot(a_t,R),a) * (np.dot(b_t,R))
-        f_2 = np.dot(np.dot(b_t,R),a) * (np.dot(a_t,R))
-        f_3 = np.dot(np.dot(b_t,R),b) * np.dot(np.dot(a_t,R),a)
-        f_4 = np.dot(np.dot(b_t,R),a)**2
+        f_1 = np.matmul(np.matmul(a_t,R),a) * (np.matmul(b_t,R))
+        f_2 = np.matmul(np.matmul(b_t,R),a) * (np.matmul(a_t,R))
+        f_3 = np.matmul(np.matmul(b_t,R),b) * np.matmul(np.matmul(a_t,R),a)
+        f_4 = np.matmul(np.matmul(b_t,R),a)**2
 
         w_k = (g_1 - g_2) / (g_3 - g_4)
         w_t = (f_1 - f_2) / (f_3 - f_4)
