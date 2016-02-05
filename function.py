@@ -66,7 +66,7 @@ def patch_map(map_smooth, patch_size, GLON, GLAT):
     
         patch   = np.zeros((patch_size, patch_size))
         new_map = patch
-        xx, yy  = np.indices((patch_size, patch_size))
+        yy, xx  = np.indices((patch_size, patch_size))
     
         patch_GLON, patch_GLAT = w.wcs_pix2world(xx, yy, 0)
         patch_PHI              = patch_GLON * ma.pi / 180. 

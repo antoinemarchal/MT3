@@ -11,11 +11,11 @@ import os
 import function as fct
 plt.ion()
 
-patch_size = 4 
+n_cluster      = 20
+patch_size     = 200 
 PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT = fct.coord_SZ(PSZ)
 
-n_cluster     = 100
 st_w          = []
 
 n_id          = 20
@@ -29,15 +29,21 @@ unit_1 = open("files_HFI_full.txt")
 origin = unit_1.tell()
 
 for k in range(n_cluster):
+    print k
     CMB_KSZ_map, TSZ_map, w_t, w_k = fct.separation(k, unit_1, origin
                                 , patch_size, NAME, GLON, GLAT, freq)
-    fct.save_fits(NAME[k], TSZ_map)
+    #fct.save_fits(NAME[k], TSZ_map)
+    st_w.append(w_t[0])
 
-#st_w.append(w_t)
+plt.figure()
+bins = np.linspace(-0.1, 0.1, 100)
+plt.hist(st_w, bins)
+plt.figure()
+plt.plot(GLAT[:n_cluster],st_w, ".")
 
-#with open('output.dat', 'wb') as output:
-#    mon_pickler = pickle.Pickler(output)
-#    mon_pickler.dump(st_w)
+with open('output.dat', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(st_w)
 
 sys.exit('stop')
 #"""---------------Plot CMB+KSZ and TSZ--------------"""
