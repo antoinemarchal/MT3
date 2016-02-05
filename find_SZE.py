@@ -11,11 +11,11 @@ import os
 import function as fct
 plt.ion()
 
-patch_size = 4 
+patch_size = 200 
 PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT = fct.coord_SZ(PSZ)
 
-n_cluster     = 100
+n_cluster     = 30 
 st_w          = []
 
 n_id          = 20
@@ -28,10 +28,20 @@ for i in range(n_obs):
 unit_1 = open("files_HFI_full.txt")
 origin = unit_1.tell()
 
+print "***********************************************************"
+print "***********************************************************"
+print "***********************************************************"
+
+print "Creating patches of SZ effect : "
 for k in range(n_cluster):
+    sys.stdout = open(os.devnull, "w")
     CMB_KSZ_map, TSZ_map, w_t, w_k = fct.separation(k, unit_1, origin
                                 , patch_size, NAME, GLON, GLAT, freq)
-    fct.save_fits(NAME[k], TSZ_map)
+    fct.save_fits(NAME[k], TSZ_map,k)
+    sys.stdout = sys.__stdout__
+
+    print k+1, " of ", n_cluster
+   
 
 #st_w.append(w_t)
 
