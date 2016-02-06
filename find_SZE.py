@@ -20,10 +20,10 @@ NAME,GLON,GLAT = fct.coord_SZ(PSZ)
 st_w          = []
 
 n_obs         = 6
-FWHM          = np.loadtxt("FWMH_HFI.txt")
+fwhm          = np.loadtxt("fwhm_HFI.txt")
 freq          = []
 for i in range(n_obs):
-    freq.append(FWHM[i,0])
+    freq.append(fwhm[i,0])
 
 unit_1 = open("files_HFI_full.txt")
 origin = unit_1.tell()
