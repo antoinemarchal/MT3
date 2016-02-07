@@ -78,7 +78,7 @@ def patch_map(map_smooth, patch_size, GLON, GLAT):
 
 def save_fits(name, patch,indice):
     path = "patch_SZ/SZ/"
-    filename = path + str(indice)+'_' + name + ".fits"
+    filename = path + str(indice+1)+'_' + name + ".fits"
     if os.path.isfile(filename) == 1:
         os.remove(filename)    
     pf.writeto(filename, patch.value)

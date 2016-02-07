@@ -65,7 +65,7 @@ for k in range(n_cluster):
         RD.append(
             np.absolute((w_t[i]-moy_w[i]) / moy_w[i])
         )
-    if (np.amin(RD) < 0.2):
+    if (np.amin(RD) < 0.1):
         st_w[j,:] = w_t
         #fct.save_fits(NAME[k], TSZ_map,k)
         j += 1

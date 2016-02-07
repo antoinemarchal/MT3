@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import math as ma
 import os
 import function as fct
-import mod_ILC as ilc
+import mod_ilc as ilc
 plt.ion()
 
 def dist_SZ(nu):
