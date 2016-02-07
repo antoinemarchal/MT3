@@ -47,9 +47,8 @@ for line in unit_1:
     sys.stdout = open(os.devnull, "w")
     filename_smooth = line.strip()
     map_smooth.append(
-        hp.read_map(path_1 + filename_smooth[10:])
+        hp.read_map(path_1 + filename_smooth)
     )
-
 """---------Creating patches of SZ effect--------
 -------------------------------------------------"""    
 print "Creating patches of SZ effect : "
@@ -57,7 +56,7 @@ j = 0
 for k in range(n_cluster):
     sys.stdout = open(os.devnull, "w")
     CMB_KSZ_map, TSZ_map, w_t, w_k = ilc.separation(
-        k, map_smooth, patch_size,NAME, GLON,
+        k, map_smooth, patch_size, NAME, GLON,
         GLAT, freq
     )
     sys.stdout = sys.__stdout__
@@ -72,6 +71,7 @@ for k in range(n_cluster):
         j += 1
         
     print k+1, ':', j, 'of', n_cluster, 'selected'
+    
 n_slct = j
 
 with open('sort_weight.dat', 'wb') as output:
