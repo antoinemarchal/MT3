@@ -98,10 +98,57 @@ def plot_map(NAME, TSZ_map, CMB_KSZ_map):
     return 0
 
 def plot_weight(GLAT, st_w, n_cluster):
-    #st_w = pickle.load(open("output.dat","rb"))
     plt.figure()
-    bins = np.linspace(-0.1, 0.1, 100)
-    plt.hist(st_w, bins)
+    plt.suptitle('fixme', size=16)
+    #bins = np.linspace(-0.1, 0.1, 100)
+    plt.subplot(2,3,1)
+    plt.hist(st_w[:n_cluster,0], facecolor='b')
+    plt.title('100 GHz')
+
+    plt.subplot(2,3,2)
+    plt.hist(st_w[:n_cluster,1], facecolor='g')
+    plt.title('143 GHz')
+
+    plt.subplot(2,3,3)
+    plt.hist(st_w[:n_cluster,2], facecolor='r')
+    plt.title('217 GHz')
+
+    plt.subplot(2,3,4)
+    plt.hist(st_w[:n_cluster,3], facecolor='c')
+    plt.title('353 GHz')
+
+    plt.subplot(2,3,5)
+    plt.hist(st_w[:n_cluster,4], facecolor='m')
+    plt.title('545 GHz')
+    
+    plt.subplot(2,3,6)
+    plt.hist(st_w[:n_cluster,5], facecolor='k')
+    plt.title('857 GHz')
+    
+    """------------------------------"""
     plt.figure()
-    plt.plot(GLAT[:n_cluster],st_w, ".")
+    plt.suptitle('weight as function of frequency fixme', size=16)
+    plt.subplot(2,3,1)
+    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,0], "b.")
+    plt.title('100 GHz')
+    
+    plt.subplot(2,3,2)
+    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,1], "g.")
+    plt.title('143 GHz')
+    
+    plt.subplot(2,3,3)
+    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,2], "r.")
+    plt.title('217 GHz')
+    
+    plt.subplot(2,3,4)
+    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,3], "c.")
+    plt.title('353 GHz')
+    
+    plt.subplot(2,3,5)
+    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,4], "m.")
+    plt.title('545 GHz')
+    
+    plt.subplot(2,3,6)
+    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,5], "k.")
+    plt.title('857 GHz')
     return 0 

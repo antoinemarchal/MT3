@@ -53,7 +53,7 @@ def weight(R, a, a_t, b, b_t):
     w_t   = (f_1 - f_2) / (f_3 - f_4)
     return (w_k, w_t)
 
-def separation(k, unit_1, origin, patch_size, NAME, GLON, GLAT, freq):
+def separation(k, map_smooth, patch_size, NAME, GLON, GLAT, freq):
     """------------------------------------------------------------
     --- separation :  
     
@@ -73,14 +73,10 @@ def separation(k, unit_1, origin, patch_size, NAME, GLON, GLAT, freq):
     b_t           = np.transpose(b)
     
     patch_map     = []
-    unit_1.seek(origin)
-    path_1 = "maps_smooth/"
-    for line in unit_1:
-        filename_smooth = line.strip()
-        map_smooth,header = hp.read_map(path_1 + filename_smooth[10:],
-                                        h=True)
+    
+    for i in range(6):
         patch_map.append(
-            (fct.patch_map(map_smooth, patch_size, GLON[k], GLAT[k]))
+            (fct.patch_map(map_smooth[i], patch_size, GLON[k], GLAT[k]))
         ) 
         
     E = np.cov((patch_map[0].flatten(), patch_map[1].flatten(),
