@@ -15,9 +15,9 @@ def dist_SZ(nu):
     """----------------------------------------------------
     --- fact_SZE : Getting back the factor f(nu) 
     
-    Parameters : nu  = frequency in GHz
+                   Parameters : nu  = frequency in GHz
     
-    Return     : f   = adimenssionless factor
+                   Return     : f   = adimenssionless factor
     --------------------------------------------------------"""
     import astropy.units as u
     from astropy import constants as const
@@ -28,16 +28,16 @@ def dist_SZ(nu):
 def weight(R, a, a_t, b, b_t):
     """-------------------------------------------------------
     --- weight : Compute the weight of each map to obtein
-    CMB+KSZ map and TSZ map.
+                 CMB+KSZ map and TSZ map.
     
-    Parameters : R      = matrix of covariance
-    between the maps
-    a, a_t = (1,...,1) and T matrix
-    b, b_t = f(nu) and T matrix
+                 Parameters : R      = matrix of covariance
+                                       between the maps
+                              a, a_t = (1,...,1) and T matrix
+                              b, b_t = f(nu) and T matrix
     
-    Return     : w_k    = weight vector of CMB+KSZ 
-    map
-    w_t    = weight vector of TSZ map
+                 Return     : w_k    = weight vector of CMB+KSZ 
+                                       map
+                              w_t    = weight vector of TSZ map
     -----------------------------------------------------------"""
     g_1 = np.matmul(np.matmul(b_t,R),b) * (np.matmul(a_t,R))
     g_2 = np.dot(np.matmul(a_t,R),b) * (np.matmul(b_t,R))
