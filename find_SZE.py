@@ -8,14 +8,15 @@ import pickle
 import sys
 import os
 
-import function as fct
 import mod_ilc as ilc
+import in_output as inout
+
 plt.ion()
 
-n_cluster      = 1653
-patch_size     = 200 
+n_cluster      = 30#1653
+patch_size     = 100 
 PSZ = "PSZ2v1.fits"
-NAME,GLON,GLAT = fct.coord_SZ(PSZ)
+NAME,GLON,GLAT = inout.coord_SZ(PSZ)
 
 n_obs         = 6
 st_w          = np.zeros((n_cluster,n_obs) )
@@ -65,10 +66,13 @@ for k in range(n_cluster):
         RD.append(
             np.absolute((w_t[i]-moy_w[i]) / moy_w[i])
         )
-    if (np.amin(RD) < 0.1):
-        st_w[j,:] = w_t
-        #fct.save_fits(NAME[k], TSZ_map,k)
-        j += 1
+    if k == 22:
+        inout.plot_map(NAME[k], TSZ_map, CMB_KSZ_map)
+    
+    #if (np.amin(RD) < 0.1):
+    st_w[j,:] = w_t
+    #inout.save_fits(NAME[k], TSZ_map,k)
+    j += 1
         
     print k+1, ':', j, 'of', n_cluster, 'selected'
     
@@ -78,4 +82,4 @@ with open('sort_weight.dat', 'wb') as output:
     mon_pickler = pickle.Pickler(output)
     mon_pickler.dump(st_w)
 
-fct.plot_weight(GLAT, st_w, n_slct)
+inout.plot_weight(GLAT, st_w, n_slct)
