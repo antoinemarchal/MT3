@@ -10,6 +10,47 @@ import math as ma
 import mod_patch as mp 
 import mod_ilc as ilc
 
+def separation(k, map_smooth, patch_size, NAME, GLON, GLAT, freq):
+    """------------------------------------------------------------
+    --- separation :  
+    
+                     Parameters : FIXME
+    
+                     Return     : w_k    = weight vector of CMB+KSZ 
+                                           map
+                                  w_t    = weight vector of TSZ map
+    ---------------------------------------------------------------"""
+    n_obs         = 6
+    f_nu          = ilc.dist_SZ(freq)
+    
+    a             = np.ones(n_obs)
+    a_t           = np.transpose(a)
+    b             = np.ones(n_obs)
+    b             = f_nu
+    b_t           = np.transpose(b)
+    
+    patch_map     = []
+    
+    for i in range(6):
+        patch_map.append(
+            (mp.patch_map(map_smooth[i], patch_size, GLON[k], GLAT[k]))
+        ) 
+        
+    E = np.cov((patch_map[0].flatten(), patch_map[1].flatten(),
+                patch_map[2].flatten(), patch_map[3].flatten(),
+                patch_map[4].flatten(), patch_map[5].flatten()))
+    R = np.linalg.inv(E)
+        
+    w_k, w_t = ilc.weight(R, a, a_t, b ,b_t)
+        
+    CMB_KSZ_map   = np.zeros((patch_size, patch_size))
+    TSZ_map       = np.zeros((patch_size, patch_size))
+        
+    for i in range(n_obs) :
+        CMB_KSZ_map = CMB_KSZ_map + (w_k[i]    * patch_map[i])
+        TSZ_map     = TSZ_map     + (w_t[i]    * patch_map[i])
+    return (CMB_KSZ_map, TSZ_map, w_t, w_k)
+
 def dist_SZ(nu):
     """----------------------------------------------------
     --- fact_SZE : Getting back the factor f(nu) 
@@ -52,45 +93,3 @@ def weight(R, a, a_t, b, b_t):
     w_t   = (f_1 - f_2) / (f_3 - f_4)
     return (w_k, w_t)
 
-def separation(k, map_smooth, patch_size, NAME, GLON, GLAT, freq):
-    """------------------------------------------------------------
-    --- separation :  
-    
-                     Parameters : FIXME
-    
-                     Return     : w_k    = weight vector of CMB+KSZ 
-                                           map
-                                  w_t    = weight vector of TSZ map
-    ---------------------------------------------------------------"""
-    n_obs         = 6
-    f_nu          = ilc.dist_SZ(freq)
-    
-    a             = np.ones(n_obs)
-    a_t           = np.transpose(a)
-    b             = np.ones(n_obs)
-    b             = f_nu
-    b_t           = np.transpose(b)
-    
-    patch_map     = []
-    
-    for i in range(6):
-        patch_map.append(
-            (mp.patch_map(map_smooth[i], patch_size, GLON[k], GLAT[k]))
-        ) 
-        
-    E = np.cov((patch_map[0].flatten(), patch_map[1].flatten(),
-                patch_map[2].flatten(), patch_map[3].flatten(),
-                patch_map[4].flatten(), patch_map[5].flatten()))
-    R = np.linalg.inv(E)
-        
-    w_k, w_t = ilc.weight(R, a, a_t, b ,b_t)
-        
-    CMB_KSZ_map   = np.zeros((patch_size, patch_size))
-    TSZ_map       = np.zeros((patch_size, patch_size))
-        
-    for i in range(n_obs) :
-        CMB_KSZ_map = CMB_KSZ_map + (w_k[i]    * patch_map[i])
-        TSZ_map     = TSZ_map     + (w_t[i]    * patch_map[i])
-    return (CMB_KSZ_map, TSZ_map, w_t, w_k)
-
-    
