@@ -6,10 +6,9 @@ import numpy as np
 import healpy as hp
 import matplotlib.pyplot as plt
 import math as ma
-import os
-import function as fct
+
+import mod_patch as mp 
 import mod_ilc as ilc
-plt.ion()
 
 def dist_SZ(nu):
     """----------------------------------------------------
@@ -76,7 +75,7 @@ def separation(k, map_smooth, patch_size, NAME, GLON, GLAT, freq):
     
     for i in range(6):
         patch_map.append(
-            (fct.patch_map(map_smooth[i], patch_size, GLON[k], GLAT[k]))
+            (mp.patch_map(map_smooth[i], patch_size, GLON[k], GLAT[k]))
         ) 
         
     E = np.cov((patch_map[0].flatten(), patch_map[1].flatten(),
