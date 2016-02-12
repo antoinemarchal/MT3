@@ -2,6 +2,7 @@ from astropy.io import fits as pyfits
 import astropy.table as pytabs
 import matplotlib.pyplot as plt
 import pyfits as pf
+import numpy as np
 import os
 
 
@@ -107,3 +108,18 @@ def plot_weight(GLAT_slct, GLAT_excl, st_w, st_w_excl, n_slct, n_excl):
              ,st_w_excl[:n_excl,5], "y.")
     plt.title('857 GHz')
     return 0 
+
+def  plot_w_full_patch(w_full, moy_w_slct, moy_w, std_w_slct, std_w, W2):
+    freq = [103.416 ,144.903, 222.598, 355.218, 528.4, 776.582]    
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    plt.errorbar(freq, moy_w, marker="o", xerr=0., yerr=std_w,
+                 color='cyan', label='1653 Cluster')
+    plt.errorbar(freq, moy_w_slct, marker="o", xerr=0., yerr=std_w_slct,
+                 color='blue', label='1360 Cluster')
+    plt.plot(freq, w_full, "r:o", lw=1, label='Full sky')
+    plt.plot(freq, W2, "m:o", lw=1, label='Full sky perso') 
+    plt.plot([0, 790], [0, 0], 'g--', lw=1)
+    plt.legend()
+    plt.show
+    return 0

@@ -47,8 +47,8 @@ def separation(k, map_smooth, patch_size, NAME, GLON, GLAT, freq):
     TSZ_map       = np.zeros((patch_size, patch_size))
         
     for i in range(n_obs) :
-        CMB_KSZ_map = CMB_KSZ_map + (w_k[i]    * patch_map[i])
-        TSZ_map     = TSZ_map     + (w_t[i]    * patch_map[i])
+        CMB_KSZ_map = CMB_KSZ_map + (w_k[i] * patch_map[i])
+        TSZ_map     = TSZ_map     + (w_t[i] * patch_map[i])
     return (CMB_KSZ_map, TSZ_map, w_t, w_k)
 
 def dist_SZ(nu):
@@ -80,7 +80,7 @@ def weight(R, a, a_t, b, b_t):
                               w_t    = weight vector of TSZ map
     -----------------------------------------------------------"""
     g_1 = np.matmul(np.matmul(b_t,R),b) * (np.matmul(a_t,R))
-    g_2 = np.dot(np.matmul(a_t,R),b) * (np.matmul(b_t,R))
+    g_2 = np.matmul(np.matmul(a_t,R),b) * (np.matmul(b_t,R))
     g_3 = np.matmul(np.matmul(a_t,R),b) * np.matmul(np.matmul(b_t,R),b)
     g_4 = np.matmul(np.matmul(a_t,R),b)**2
     

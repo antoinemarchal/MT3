@@ -31,9 +31,13 @@ for i in range(n_obs):
 """---Compute the average value of weight for 
       each frequency-----------------------------"""
 w = pickle.load(open("weight.dat","rb"))
-moy_w = []
+moy_w      = []
+moy_w_slct = []
+std_w_slct = []
+std_w      = []
 for i in range(n_obs):
     moy_w.append(np.mean(w[:n_cluster,i]))
+    std_w.append(np.std(w[:n_cluster,i]))
 
 print "********************************************"
 print "********************************************"
@@ -53,8 +57,26 @@ for line in unit_1:
     map_smooth.append(
         hp.read_map(path_1 + filename_smooth)
     )
+"""-----------Separation of full sky map------------
+-------------------------------------------------"""
+f_nu          = ilc.dist_SZ(freq)
+a             = np.ones(n_obs)
+a_t           = np.transpose(a)
+b             = np.ones(n_obs)
+b             = f_nu
+b_t           = np.transpose(b)
+CMB   = np.zeros(hp.get_map_size(map_smooth[0]))
+TSZ   = np.zeros(hp.get_map_size(map_smooth[0]))
+J = np.cov((map_smooth[0], map_smooth[1], map_smooth[2], map_smooth[3],
+           map_smooth[4], map_smooth[5]))
+K = np.linalg.inv(J)
+WK, WT = ilc.weight(K, a, a_t, b ,b_t)
+for i in range(n_obs) :
+    CMB = CMB + (WK[i] * map_smooth[i])
+    TSZ = TSZ + (WT[i] * map_smooth[i])
+
 """---------Creating patches of SZ effect--------
--------------------------------------------------"""    
+   ----------------------------------------------"""    
 print "Creating patches of SZ effect : "
 j = 0
 l = 0
@@ -65,31 +87,43 @@ for k in range(n_cluster):
         GLAT, freq
     )
     sys.stdout = sys.__stdout__
-    RD = []
-    for i in range(n_obs):
-        RD.append(
-            np.absolute((w_t[i]-moy_w[i])) / moy_w[i]
-        )
-    #if k == 22:
-    #    inout.plot_map(NAME[k], TSZ_map, CMB_KSZ_map)
     
-    if (np.absolute(RD[0]) > 0.90):
+    """------Separation of cluster population------
+       --------------------------------------------"""
+    RD = []
+    for i in range(n_obs-2):
+        RD.append(
+            np.absolute((w_t[i]-moy_w[i]) / std_w[i])
+        )
+    if k == 22:
+        inout.plot_map(NAME[k], TSZ_map, CMB_KSZ_map)
+
+    if ((RD[0] > 1.5)
+    | (RD[1] > 1.5)
+    | (RD[2] > 1.5)):
         GLAT_excl[j]   = GLAT[k]
         st_w_excl[j,:] = w_t
         j += 1
     else:
-        st_w[l,:]    = w_t
-        GLAT_slct[l] = GLAT[k]
+        st_w[l,:]      = w_t
+        GLAT_slct[l]   = GLAT[k]
         #inout.save_fits(NAME[k], TSZ_map,k)
         l += 1
-
+        
     print k+1#, ':', k+1-j, 'of', n_cluster, 'selected'
-
 n_slct = l
 n_excl = j
 
-#with open('sort_weight.dat', 'wb') as output:
-#    mon_pickler = pickle.Pickler(output)
-#    mon_pickler.dump(st_w)
+for i in range(n_obs):
+    moy_w_slct.append(np.mean(st_w[:n_slct,i]))
+    std_w_slct.append(np.std(st_w[:n_slct,i]))
 
+w_full_sky = np.loadtxt("w_full_sky.d")
+
+inout.plot_w_full_patch(w_full_sky[:,0], moy_w_slct, moy_w, std_w_slct,
+                        std_w, WT)
 inout.plot_weight(GLAT_slct, GLAT_excl, st_w, st_w_excl, n_slct, n_excl)
+
+
+
+    
