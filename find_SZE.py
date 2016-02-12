@@ -13,13 +13,16 @@ import in_output as inout
 
 plt.ion()
 
-n_cluster      = 30#1653
+n_cluster      = 1653
 patch_size     = 100 
 PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT = inout.coord_SZ(PSZ)
 
 n_obs         = 6
-st_w          = np.zeros((n_cluster,n_obs) )
+st_w          = np.zeros((n_cluster,n_obs))
+GLAT_slct     = np.zeros(n_cluster)
+st_w_excl     = np.zeros((n_cluster,n_obs))
+GLAT_excl     = np.zeros(n_cluster)
 fwhm          = np.loadtxt("fwhm_HFI.txt")
 freq          = []
 for i in range(n_obs):
@@ -29,7 +32,7 @@ for i in range(n_obs):
       each frequency-----------------------------"""
 w = pickle.load(open("weight.dat","rb"))
 moy_w = []
-for i in range(6):
+for i in range(n_obs):
     moy_w.append(np.mean(w[:n_cluster,i]))
 
 print "********************************************"
@@ -54,6 +57,7 @@ for line in unit_1:
 -------------------------------------------------"""    
 print "Creating patches of SZ effect : "
 j = 0
+l = 0
 for k in range(n_cluster):
     sys.stdout = open(os.devnull, "w")
     CMB_KSZ_map, TSZ_map, w_t, w_k = ilc.separation(
@@ -64,22 +68,28 @@ for k in range(n_cluster):
     RD = []
     for i in range(n_obs):
         RD.append(
-            np.absolute((w_t[i]-moy_w[i]) / moy_w[i])
+            np.absolute((w_t[i]-moy_w[i])) / moy_w[i]
         )
-    if k == 22:
-        inout.plot_map(NAME[k], TSZ_map, CMB_KSZ_map)
+    #if k == 22:
+    #    inout.plot_map(NAME[k], TSZ_map, CMB_KSZ_map)
     
-    #if (np.amin(RD) < 0.1):
-    st_w[j,:] = w_t
-    #inout.save_fits(NAME[k], TSZ_map,k)
-    j += 1
-        
-    print k+1, ':', j, 'of', n_cluster, 'selected'
-    
-n_slct = j
+    if (np.absolute(RD[0]) > 0.90):
+        GLAT_excl[j]   = GLAT[k]
+        st_w_excl[j,:] = w_t
+        j += 1
+    else:
+        st_w[l,:]    = w_t
+        GLAT_slct[l] = GLAT[k]
+        #inout.save_fits(NAME[k], TSZ_map,k)
+        l += 1
 
-with open('sort_weight.dat', 'wb') as output:
-    mon_pickler = pickle.Pickler(output)
-    mon_pickler.dump(st_w)
+    print k+1#, ':', k+1-j, 'of', n_cluster, 'selected'
 
-inout.plot_weight(GLAT, st_w, n_slct)
+n_slct = l
+n_excl = j
+
+#with open('sort_weight.dat', 'wb') as output:
+#    mon_pickler = pickle.Pickler(output)
+#    mon_pickler.dump(st_w)
+
+inout.plot_weight(GLAT_slct, GLAT_excl, st_w, st_w_excl, n_slct, n_excl)
