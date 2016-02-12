@@ -121,5 +121,7 @@ def  plot_w_full_patch(w_full, moy_w_slct, moy_w, std_w_slct, std_w, W2):
     plt.plot(freq, W2, "m:o", lw=1, label='Full sky perso') 
     plt.plot([0, 790], [0, 0], 'g--', lw=1)
     plt.legend()
+    plt.xlabel('Frequence [GHz]')
+    plt.ylabel('Weight')
     plt.show
     return 0
