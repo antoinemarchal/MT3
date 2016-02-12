@@ -44,58 +44,66 @@ def plot_map(NAME, TSZ_map, CMB_KSZ_map):
     plt.title('CMB+KSZ map')
     return 0
 
-def plot_weight(GLAT, st_w, n_cluster):
+def plot_weight(GLAT_slct, GLAT_excl, st_w, st_w_excl, n_slct, n_excl):
     plt.figure()
     plt.suptitle('fixme', size=16)
     #bins = np.linspace(-0.1, 0.1, 100)
     plt.subplot(2,3,1)
-    plt.hist(st_w[:n_cluster,0], facecolor='b')
+    plt.hist(st_w[:n_slct,0], facecolor='b')
     plt.title('100 GHz')
 
     plt.subplot(2,3,2)
-    plt.hist(st_w[:n_cluster,1], facecolor='g')
+    plt.hist(st_w[:n_slct,1], facecolor='g')
     plt.title('143 GHz')
 
     plt.subplot(2,3,3)
-    plt.hist(st_w[:n_cluster,2], facecolor='r')
+    plt.hist(st_w[:n_slct,2], facecolor='r')
     plt.title('217 GHz')
 
     plt.subplot(2,3,4)
-    plt.hist(st_w[:n_cluster,3], facecolor='c')
+    plt.hist(st_w[:n_slct,3], facecolor='c')
     plt.title('353 GHz')
 
     plt.subplot(2,3,5)
-    plt.hist(st_w[:n_cluster,4], facecolor='m')
+    plt.hist(st_w[:n_slct,4], facecolor='m')
     plt.title('545 GHz')
     
     plt.subplot(2,3,6)
-    plt.hist(st_w[:n_cluster,5], facecolor='k')
+    plt.hist(st_w[:n_slct,5], facecolor='k')
     plt.title('857 GHz')
     
     """------------------------------"""
     plt.figure()
-    plt.suptitle('weight as function of frequency fixme', size=16)
+    plt.suptitle('weight as function of frequency fixme --'
+                 + str(n_slct) + 'Selected' + str(n_excl)
+                 + 'exclu', size=16)
     plt.subplot(2,3,1)
-    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,0], "b.")
+    plt.plot(GLAT_slct[:n_slct], st_w[:n_slct,0], "b.", GLAT_excl[:n_excl]
+             ,st_w_excl[:n_excl,0], "y.")
     plt.title('100 GHz')
     
     plt.subplot(2,3,2)
-    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,1], "g.")
+    plt.plot(GLAT_slct[:n_slct], st_w[:n_slct,1], "g.", GLAT_excl[:n_excl]
+             ,st_w_excl[:n_excl,1], "y.")
     plt.title('143 GHz')
     
     plt.subplot(2,3,3)
-    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,2], "r.")
+    plt.plot(GLAT_slct[:n_slct], st_w[:n_slct,2], "r.", GLAT_excl[:n_excl]
+             ,st_w_excl[:n_excl,2], "y.")
     plt.title('217 GHz')
     
     plt.subplot(2,3,4)
-    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,3], "c.")
+    plt.plot(GLAT_slct[:n_slct], st_w[:n_slct,3], "c.", GLAT_excl[:n_excl]
+             ,st_w_excl[:n_excl,3], "y.")
     plt.title('353 GHz')
     
     plt.subplot(2,3,5)
-    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,4], "m.")
+    plt.plot(GLAT_slct[:n_slct], st_w[:n_slct,4], "m.", GLAT_excl[:n_excl]
+             ,st_w_excl[:n_excl,4], "y.")
     plt.title('545 GHz')
     
     plt.subplot(2,3,6)
-    plt.plot(GLAT[:n_cluster],st_w[:n_cluster,5], "k.")
+    plt.plot(GLAT_slct[:n_slct],st_w[:n_slct,5], "k.", GLAT_excl[:n_excl]
+             ,st_w_excl[:n_excl,5], "y.")
     plt.title('857 GHz')
     return 0 
