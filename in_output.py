@@ -26,7 +26,7 @@ def coord_SZ(filename):
     return (NAME,GLON,GLAT)
 
 def save_fits(name, patch,indice):
-    path = "patch_SZ/SZ/"
+    path = "patch_SZ/"
     filename = path + str(indice+1)+'_' + name + ".fits"
     if os.path.isfile(filename) == 1:
         os.remove(filename)    
