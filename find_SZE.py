@@ -122,7 +122,7 @@ for k in range(n_cluster):
         )
     if args.plot:
         if k == 22:
-            inout.plot_map(NAME[k], TSZ_map, CMB_KSZ_map)
+            fig_map = inout.plot_map(NAME[k], TSZ_map, CMB_KSZ_map)
 
     #Condition with SD on each freq to select cluster
     #of our catalog.
@@ -157,13 +157,20 @@ if args.plot:
     print "Results :"
     #Plot of weight histogram and GLAT correlation
     #Plot of comparison with average weight of other group
+
+    inout.plot_w_hist(
+        GLAT_slct, st_w, n_slct, 'ggplot'
+    )
+    inout.plot_w_glat(
+        GLAT_slct, GLAT_excl, st_w, st_w_excl,
+        n_slct, n_excl, 'ggplot'
+        )
     inout.plot_w_full_patch(
-        w_full_sky[:,0], moy_w_slct, moy_w, std_w_slct, std_w, WT
-        , n_slct
+        w_full_sky[:,0], moy_w_slct, moy_w, std_w_slct,
+        std_w, WT , n_slct, 'ggplot'
     )
-    inout.plot_weight(
-        GLAT_slct, GLAT_excl, st_w, st_w_excl, n_slct, n_excl
-    )
+    
+
 
 
 
