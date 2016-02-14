@@ -3,6 +3,7 @@ import astropy.table as pytabs
 import matplotlib.pyplot as plt
 import pyfits as pf
 import numpy as np
+import sys
 import os
 
 
@@ -109,14 +110,15 @@ def plot_weight(GLAT_slct, GLAT_excl, st_w, st_w_excl, n_slct, n_excl):
     plt.title('857 GHz')
     return 0 
 
-def  plot_w_full_patch(w_full, moy_w_slct, moy_w, std_w_slct, std_w, W2):
+def  plot_w_full_patch(w_full, moy_w_slct, moy_w, std_w_slct
+                       , std_w, W2, n_slct):
     freq = [103.416 ,144.903, 222.598, 355.218, 528.4, 776.582]    
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     plt.errorbar(freq, moy_w, marker="o", xerr=0., yerr=std_w,
                  color='cyan', label='1653 Cluster')
     plt.errorbar(freq, moy_w_slct, marker="o", xerr=0., yerr=std_w_slct,
-                 color='blue', label='1360 Cluster')
+                 color='blue', label=str(n_slct)+'Cluster')
     plt.plot(freq, w_full, "r:o", lw=1, label='Full sky')
     plt.plot(freq, W2, "m:o", lw=1, label='Full sky perso') 
     plt.plot([0, 790], [0, 0], 'g--', lw=1)
@@ -125,3 +127,13 @@ def  plot_w_full_patch(w_full, moy_w_slct, moy_w, std_w_slct, std_w, W2):
     plt.ylabel('Weight')
     plt.show
     return 0
+
+def progress(count, total, suffix=''):
+    bar_len = 60
+    filled_len = int(round(bar_len * count / float(total)))
+
+    percents = round(100.0 * count / float(total), 1)
+    bar = '=' * filled_len + '-' * (bar_len - filled_len)
+
+    sys.stdout.write('[%s] %s%s --- %s\r' % (bar, percents, '%', suffix))
+    sys.stdout.flush()
