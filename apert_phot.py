@@ -2,7 +2,7 @@ import sys
 import astropy.io.fits as pyfits
 import matplotlib.pyplot as plt
 import numpy as np
-import function as fct
+#import function as fct
 import numpy.ma as ma
 import math as ma 
 
@@ -10,7 +10,7 @@ import math as ma
 
 def sector_mask(shape,centre,radius,angle_range):
     
-    #retourne un masque booleen sur un secteur sirculaire
+    #retourne un masque booleen sur un secteur circulaire
     #shape      = data.shape
     #centre      = tuple
     #angle_range = tuple
@@ -70,13 +70,13 @@ def phot_mask(data,r_circle,rin,rout,plot):
         plt.figure(2)
         plt.subplot(2,2,1)
         plt.imshow(data,origin = 'lower',interpolation = 'none')
-        plt.show()
+        #plt.show()
         plt.subplot(2,2,2)
         plt.imshow(data_circle,origin = 'lower',interpolation = 'none')
-        plt.show()
+        #plt.show()
         plt.subplot(2,2,3)
         plt.imshow(data_ring,origin = 'lower',interpolation = 'none')
-        plt.show()
+        #plt.show()
         plt.subplot(2,2,4)
         plt.imshow(data_circle + data_ring,origin='lower',interpolation='none')
         plt.show()
@@ -111,38 +111,61 @@ def area(data_circle, data_ring):
     return (area_circle,area_ring)
 
 ###################################################################
-
-
 def radial_profile(data, center,plot):
     y, x = np.indices((data.shape))
     r = np.sqrt((x - center[0])**2 + (y - center[1])**2)
     
-    #convert r to int ==> definit la tille du bin
+    #convert r to int ==> definit la taille du bin
     r = r.astype(np.int)
 
     tbin = np.bincount(r.ravel(), data.ravel())
     nr = np.bincount(r.ravel())
     radialprofile = tbin / nr
+    #Normalisation
+    radialprofile = (radialprofile - np.min(radialprofile)) \
+                    / (np.max(radialprofile) - np.min(radialprofile))
+    #print np.max(radialprofile)
+    #print np.min(radialprofile)
+                           
+    #### Calcul d'un rayon caracteristique rc :
+    #### 90 % du flux en partant du centre
+    r_90 = np.where(radialprofile >= 0.1) #FIXME
+    r_90 = np.asarray(r_90)
+    r_90 = np.ravel(r_90)
+    for i in range(len(r_90)-1):
+        if r_90[i+1] != r_90[i]+1:
+            rc = r_90[i]
+            break
+        else:
+            rc = np.max(r_90)
+
+    #max = np.max(radialprofile)
+    #mean_noise = np.mean(radialprofile[40:50]) #FIXME
+    #r2 = np.where(radialprofile-mean_noise >= 0.5*max)
+    #r2 = np.asarray(r2)
+    #r2 = np.ravel(r2)
+    #rc = r2[-1]
 
     if plot ==1 : 
-        plt.figure(4)
+        fig = plt.figure(4)
+        ax = fig.add_subplot(1, 1, 1)
         plt.plot(radialprofile)
-        plt.show()
-
-    #### calcul d'un rayon caracteristique rc :
-    max = np.max(radialprofile)
-    mean_noise = np.mean(radialprofile[40:50]) #FIXME
-  
-    r2 = np.where(radialprofile-mean_noise >= 0.3*max)
-    r2 = np.asarray(r2)
-    r2 = np.ravel(r2)
-    rc = r2[-1]
+        plt.plot([rc, rc], [0,1], 'r--', lw=2)
+        plt.plot([0, 70], [0.1, 0.1], 'g--', lw=2)
+        ax.axvspan(0, rc, alpha=0.5, color='grey')
+        plt.xlabel('Radius [pix]')
+        plt.ylabel('Flux')
+        #plt.show()
 
     return (radialprofile,rc) 
 
 
 
-patch ='patch_SZ/SZ/23_PSZ2 G006.76+30.45.fits'
+#patch ='patch_SZ/1441_PSZ2 G305.76+44.79.fits'
+#patch = 'patch_SZ/121_PSZ2 G033.97-76.61.fits'
+#patch = 'patch_SZ/276_PSZ2 G066.26+20.82.fits'
+#patch = 'patch_SZ/348_PSZ2 G081.22-41.95.fits'
+patch = 'patch_SZ/1592_PSZ2 G340.94+35.07.fits'
 data = pyfits.getdata(patch)
 n1,n2 = data.shape
 centre = (n1/2,n2/2)
