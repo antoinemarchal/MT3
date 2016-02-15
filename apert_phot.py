@@ -121,11 +121,10 @@ def radial_profile(data, center,plot):
     tbin = np.bincount(r.ravel(), data.ravel())
     nr = np.bincount(r.ravel())
     radialprofile = tbin / nr
+    
     #Normalisation
     radialprofile = (radialprofile - np.min(radialprofile)) \
                     / (np.max(radialprofile) - np.min(radialprofile))
-    #print np.max(radialprofile)
-    #print np.min(radialprofile)
                            
     #### Calcul d'un rayon caracteristique rc :
     #### 90 % du flux en partant du centre
@@ -139,13 +138,6 @@ def radial_profile(data, center,plot):
         else:
             rc = np.max(r_90)
 
-    #max = np.max(radialprofile)
-    #mean_noise = np.mean(radialprofile[40:50]) #FIXME
-    #r2 = np.where(radialprofile-mean_noise >= 0.5*max)
-    #r2 = np.asarray(r2)
-    #r2 = np.ravel(r2)
-    #rc = r2[-1]
-
     if plot ==1 : 
         fig = plt.figure(4)
         ax = fig.add_subplot(1, 1, 1)
@@ -158,6 +150,50 @@ def radial_profile(data, center,plot):
         #plt.show()
 
     return (radialprofile,rc) 
+
+#######################################################
+
+def get_flux(data_circle,data_ring):
+#retourne la valeur du flux de la cource en tenant compte 
+#du bruit moyen dans l'anneau
+	raw_flux =  np.sum (data_circle)
+
+	pixel_ring =np. where(data_ring > 0 )
+	pixel_ring = np.ravel(pixel_ring)
+	npixel_ring = len(pixel_ring)
+	
+	pixel_circle = np.where(data_circle > 0 )
+	pixel_circle = np.ravel(pixel_circle)
+	npixel_circle = len(pixel_circle)
+
+	avg_bckd = np.sum(data_ring)/npixel_ring
+	
+	flux = raw_flux - npixel_circle*avg_bckd
+
+	return flux,npixel_circle,npixel_ring
+#######################################################
+
+def do_photometry():
+	
+	filenames =  open ("patch_SZ/filenames.txt")
+	path = "patch_SZ/"
+
+	for line in filenames: 
+		patch = path + line.strip()
+		data = pyfits.getdata(patch)
+		n1,n2 = data.shape
+		centre = (n1/2,n2/2)
+		profile,rc = radial_profile(data,centre,0)
+		print rc
+		##FIXME
+		##modifier les valeur de rayon pour les anneaux
+		### !!!! ne jamais metre 1 en dernier argument####
+		data_circle,data_ring = phot_mask(data,rc,35,45,0)
+		flux =  get_flux(data_circle,data_ring)
+
+
+	return 0 
+
 
 
 
@@ -173,14 +209,18 @@ centre = (n1/2,n2/2)
 profile,rc = radial_profile(data,centre,1)
 print "rayon crit",rc
 data_circle,data_ring = phot_mask(data,rc ,35,45,1)
-#### jusque la c'est bon
+
+flux = get_flux(data_circle,data_ring)
+
+#a = do_photometry()
 
 
-frac_in,frac_out = lobe_frac(data,data_circle)
-print "fracction du lobe dedans et dehors",frac_in, frac_out
-area_circle,area_ring = area(data_circle,data_ring)
-print "surfaces cercle et anneau : ", area_circle,area_ring
+#frac_in,frac_out = lobe_frac(data,data_circle)
+#print "fracction du lobe dedans et dehors",frac_in, frac_out
+#area_circle,area_ring = area(data_circle,data_ring)
+#print "surfaces cercle et anneau : ", area_circle,area_ring
 
 
 
-
+##################################################################################################
+# penser a mettre des valeurs aberentes qunad : divisionpar 0 ou mauvaise valeur double scalaire 
