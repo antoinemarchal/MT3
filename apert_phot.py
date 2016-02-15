@@ -128,7 +128,8 @@ def radial_profile(data, center,plot):
                            
     #### Calcul d'un rayon caracteristique rc :
     #### 90 % du flux en partant du centre
-    r_90 = np.where(radialprofile >= 0.1) #FIXME
+    threshold = 0.1
+    r_90 = np.where(radialprofile >= threshold) #FIXME
     r_90 = np.asarray(r_90)
     r_90 = np.ravel(r_90)
     for i in range(len(r_90)-1):
@@ -143,8 +144,8 @@ def radial_profile(data, center,plot):
         ax = fig.add_subplot(1, 1, 1)
         plt.plot(radialprofile)
         plt.plot([rc, rc], [0,1], 'r--', lw=2)
-        plt.plot([0, 70], [0.1, 0.1], 'g--', lw=2)
-        ax.axvspan(0, rc, alpha=0.5, color='grey')
+        plt.plot([0, 70], [threshold, threshold], 'g--', lw=2)
+        ax.axvspan(0, rc, alpha=0.4, color='grey')
         plt.xlabel('Radius [pix]')
         plt.ylabel('Flux')
         #plt.show()
