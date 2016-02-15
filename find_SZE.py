@@ -136,7 +136,7 @@ for k in range(n_cluster):
     else:
         GLAT_slct[l]   = GLAT[k]
         st_w[l,:]      = w_t
-        inout.save_fits(NAME[k], TSZ_map,k)
+        #inout.save_fits(NAME[k], TSZ_map,k)
         l += 1        
     #print k+1, ':', l+1, 'of', n_cluster, 'selected'
 n_slct = l

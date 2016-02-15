@@ -2,7 +2,7 @@ import sys
 import astropy.io.fits as pyfits
 import matplotlib.pyplot as plt
 import numpy as np
-#import function as fct
+import in_output as inout
 import numpy.ma as ma
 import math as ma 
 
@@ -137,8 +137,8 @@ def radial_profile(data, center,plot):
             break
         else:
             rc = np.max(r_90)
-
-    if plot ==1 : 
+            
+    if plot == 1 : 
         fig = plt.figure(4)
         ax = fig.add_subplot(1, 1, 1)
         plt.plot(radialprofile)
@@ -148,7 +148,6 @@ def radial_profile(data, center,plot):
         plt.xlabel('Radius [pix]')
         plt.ylabel('Flux')
         #plt.show()
-
     return (radialprofile,rc) 
 
 #######################################################
@@ -175,33 +174,33 @@ def get_flux(data_circle,data_ring):
 
 def do_photometry():
 	
-	filenames =  open ("patch_SZ/filenames.txt")
-	path = "patch_SZ/"
-
-	for line in filenames: 
-		patch = path + line.strip()
-		data = pyfits.getdata(patch)
-		n1,n2 = data.shape
-		centre = (n1/2,n2/2)
-		profile,rc = radial_profile(data,centre,0)
-		print rc
-		##FIXME
-		##modifier les valeur de rayon pour les anneaux
-		### !!!! ne jamais metre 1 en dernier argument####
-		data_circle,data_ring = phot_mask(data,rc,35,45,0)
-		flux =  get_flux(data_circle,data_ring)
-
-
+	filenames =  open ("patch_SZ/SZ/filenames.txt")
+	path = "patch_SZ/SZ/"
+        k = 0
+	for line in filenames:
+            inout.progress(k, 1320, 'Cluster')
+	    patch = path + line.strip()
+	    data = pyfits.getdata(patch)
+	    n1,n2 = data.shape
+	    centre = (n1/2,n2/2)
+	    profile,rc = radial_profile(data,centre,0)
+	    #print rc
+	    ##FIXME
+	    ##modifier les valeur de rayon pour les anneaux
+	    ### !!!! ne jamais metre 1 en dernier argument####
+	    data_circle,data_ring = phot_mask(data,rc,35,45,0)
+	    flux =  get_flux(data_circle,data_ring)
+            k +=1
 	return 0 
 
 
 
 
-#patch ='patch_SZ/1441_PSZ2 G305.76+44.79.fits'
-#patch = 'patch_SZ/121_PSZ2 G033.97-76.61.fits'
-#patch = 'patch_SZ/276_PSZ2 G066.26+20.82.fits'
-#patch = 'patch_SZ/348_PSZ2 G081.22-41.95.fits'
-patch = 'patch_SZ/1592_PSZ2 G340.94+35.07.fits'
+patch ='patch_SZ/SZ/1441_PSZ2 G305.76+44.79.fits'
+#patch = 'patch_SZ/SZ/121_PSZ2 G033.97-76.61.fits'
+#patch = 'patch_SZ/SZ/276_PSZ2 G066.26+20.82.fits'
+#patch = 'patch_SZ/SZ/348_PSZ2 G081.22-41.95.fits'
+#patch = 'patch_SZ/SZ/1592_PSZ2 G340.94+35.07.fits'
 data = pyfits.getdata(patch)
 n1,n2 = data.shape
 centre = (n1/2,n2/2)
@@ -212,7 +211,7 @@ data_circle,data_ring = phot_mask(data,rc ,35,45,1)
 
 flux = get_flux(data_circle,data_ring)
 
-#a = do_photometry()
+a = do_photometry()
 
 
 #frac_in,frac_out = lobe_frac(data,data_circle)
