@@ -267,15 +267,23 @@ plt.xlabel('z')
 plt.ylabel('Flux')
 plt.plot(in_rslt[:n_in,0], in_rslt[:n_in,1], color[2],
          out_rslt[:n_out,0], out_rslt[:n_out,1], color[6])
+
 plt.subplot(2,2,2)
 plt.xlabel('z')
-plt.ylabel('N cluster')
-plt.hist(in_rslt[:n_in,0], bins_r, facecolor='b')
+plt.ylabel('Flux')
+plt.plot(in_rslt[:n_in,0], in_rslt[:n_in,1], color[2])
+
 plt.subplot(2,2,3)
 plt.xlabel('Flux')
 plt.ylabel('N cluster')
 plt.hist(in_rslt[:n_in,1], bins_f, facecolor='g')
 plt.plot([moy, moy], [0,85], 'r--', lw=2)
+
+plt.subplot(2,2,4)
+plt.xlabel('z')
+plt.ylabel('N cluster')
+plt.hist(in_rslt[:n_in,0], bins_r, facecolor='b')
+
 plt.savefig('results/study_flow.png')
 plt.show()
 
