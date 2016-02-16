@@ -271,5 +271,6 @@ plt.show()
 
 #separer les populations et comparer a un catalogue de super amas 
 
-# travailler sur des patch en 200*200 
+# travailler sur des patch en 200*200  ==> penser a regarder l'influence de 
+# tout ce bordel sur les poids
 
