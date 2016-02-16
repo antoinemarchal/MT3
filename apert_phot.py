@@ -128,19 +128,19 @@ def radial_profile(data, center,plot):
                     / (np.max(radialprofile) - np.min(radialprofile))
                            
     #### Calcul d'un rayon caracteristique rc :
-    #### 90 % du flux en partant du centre
+    #### 60 % du flux en partant du centre
 	##valeur seuil a discuter...
-    threshold = 0.1
-    r_90 = np.where(radialprofile >= threshold)
-    r_90 = np.asarray(r_90)
-    r_90 = np.ravel(r_90)
-    for i in range(len(r_90)-1):
-        if r_90[i+1] != r_90[i]+1:
-            rc = r_90[i]
+    threshold = 0.4
+    r_60 = np.where(radialprofile >= threshold)
+    r_60 = np.asarray(r_60)
+    r_60 = np.ravel(r_60)
+    for i in range(len(r_60)-1):
+        if r_60[i+1] != r_60[i]+1:
+            rc = r_60[i]
             break
         else:
 	#discutable si profile non monotone
-            rc = np.max(r_90)
+            rc = np.max(r_60)
 
     if plot == 1 :
         style = 'grayscale'
@@ -163,14 +163,15 @@ def get_flux(data_circle,data_ring):
 #du bruit moyen dans l'anneau
     raw_flux =  np.sum (data_circle)
 
-    pixel_ring =np. where(data_ring > 0 )
+    pixel_ring =np.where(data_ring != 0 )
     pixel_ring = np.ravel(pixel_ring)
     npixel_ring = len(pixel_ring)
+   
     
-    pixel_circle = np.where(data_circle > 0 )
+    pixel_circle = np.where(data_circle != 0 )
     pixel_circle = np.ravel(pixel_circle)
     npixel_circle = len(pixel_circle)
-    
+
     avg_bckd = np.sum(data_ring)/npixel_ring
     
     flux = raw_flux - npixel_circle*avg_bckd
@@ -194,30 +195,29 @@ def do_photometry(n_cluster):
     	n1,n2      = map.shape
 	centre     = (n1/2,n2/2)
 	profile,rc = radial_profile(map,centre,0)
-	#print rc
+       
 	##FIXME
 	##modifier les valeur de rayon pour les anneaux
 	### !!!! ne jamais metre 1 en dernier argument####
 	data_circle,data_ring = phot_mask(map,rc,35,45,0)
-        flux.append(get_flux(data_circle,data_ring))
-        redshift.append(rd[0])
+        pouet = get_flux(data_circle,data_ring)
+        #if pouet >= 0.03 :
+        #    plt.figure()
+        #    plt.imshow(data_circle)
+        #    plt.show()
+        
+        if rc <=13 : 
+            flux.append(get_flux(data_circle,data_ring))
+            redshift.append(rd[0])
         k += 1
     return flux, redshift
     
-patch ='patch_SZ/SZ/1441_PSZ2 G305.76+44.79.fits'
-#patch = 'patch_SZ/SZ/121_PSZ2 G033.97-76.61.fits'
-#patch = 'patch_SZ/SZ/276_PSZ2 G066.26+20.82.fits'
-#patch = 'patch_SZ/SZ/348_PSZ2 G081.22-41.95.fits'
-#patch = 'patch_SZ/SZ/1592_PSZ2 G340.94+35.07.fits'
 
-data = pyfits.getdata(patch)
-n1,n2 = data.shape
-centre = (n1/2,n2/2)
+#**************************************************************************
+#**************************************************************************
+#**************************************************************************
+#**************************************************************************
 
-profile,rc = radial_profile(data,centre,1)
-#print "rayon crit",rc
-data_circle,data_ring = phot_mask(data,rc ,35,45,1)
-flux = get_flux(data_circle,data_ring)
 
 PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT, REDSHIFT = inout.coord_SZ(PSZ)
@@ -250,12 +250,26 @@ plt.subplot(2,2,3)
 plt.hist(rslt[:n_cl,1], bins_f, facecolor='g')
 plt.show()
 
-#frac_in,frac_out = lobe_frac(data,data_circle)
-#print "fracction du lobe dedans et dehors",frac_in, frac_out
-#area_circle,area_ring = area(data_circle,data_ring)
-#print "surfaces cercle et anneau : ", area_circle,area_ring
-
 
 
 ##################################################################################################
-# penser a mettre des valeurs aberentes qunad : divisionpar 0 ou mauvaise valeur double scalaire 
+# sources SZ non centrees ==> cercle photometrique bcp trop grand
+# car le profile radial est fausse
+
+# avec des techniques de roumains on peut voir que c'est probablement
+# la bonne explication ==> bcp moin de source a tres grand flux 
+
+#soit on degage les sources non centrees soit on fait un profil
+# radial a partir du max (qu'on suppose etre le centre de la source)
+# de la carte
+
+
+## effet de resolution de source ? seul les amas avec un redshift faible on
+# parfois un flux tres important.
+
+
+
+#separer les populations et comparer a un catalogue de super amas 
+
+# travailler sur des patch en 200*200 
+
