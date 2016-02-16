@@ -31,17 +31,15 @@ def save_fits(name, redshift, patch,indice):
     filename = path + str(indice+1)+'_' + name + ".fits"
     if os.path.isfile(filename) == 1:
         os.remove(filename)
-    a = np.array([redshift])
-    hdu = pyfits.PrimaryHDU(patch.value)
-    hdulist = pyfits.HDUList([hdu])
-    col_1 = pyfits.Column(name='REDSHIFT', format='E', array=a)
-    cols = pyfits.ColDefs([col_1])
-    tbhdu = pyfits.BinTableHDU.from_columns(cols)
-    prihdr = pyfits.Header()
-    prihdr['COMMENT'] = "Here's some commentary about this FITS file."
+    a        = np.array([redshift])
+    hdu      = pyfits.PrimaryHDU(patch.value)
+    hdulist  = pyfits.HDUList([hdu])
+    col_1    = pyfits.Column(name='REDSHIFT', format='E', array=a)
+    cols     = pyfits.ColDefs([col_1])
+    tbhdu    = pyfits.BinTableHDU.from_columns(cols)
+    prihdr   = pyfits.Header()
+    prihdr['COMMENT'] = "Commentary fixme"
     prihdu = pyfits.PrimaryHDU(header=prihdr)
-    #pf.writeto(filename, patch.value)#, redshift)
-    #thdulist = pyfits.HDUList([prihdu, tbhdu])
     hdulist.append(tbhdu)
     hdulist.writeto(filename)
     return 0

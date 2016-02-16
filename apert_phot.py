@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import in_output as inout
 import numpy.ma as ma
-import math as ma 
+import math as ma
+import astropy.table as pytabs
 
 
 
@@ -186,20 +187,20 @@ def do_photometry(n_cluster):
     for line in filenames:
         inout.progress(k, n_cluster, 'Cluster')
 	patch      = path + line.strip()
-	data       = pyfits.getdata(patch)
-        hdulist    = pyfits.open(patch)
-	n1,n2      = data.shape
+	map        = pyfits.getdata(patch)
+        cat        = pyfits.getdata(patch,1)
+        data       = pytabs.Table(cat)
+        rd         = data['REDSHIFT']
+    	n1,n2      = map.shape
 	centre     = (n1/2,n2/2)
-	profile,rc = radial_profile(data,centre,0)
+	profile,rc = radial_profile(map,centre,0)
 	#print rc
 	##FIXME
 	##modifier les valeur de rayon pour les anneaux
 	### !!!! ne jamais metre 1 en dernier argument####
-	data_circle,data_ring = phot_mask(data,rc,35,45,0)
+	data_circle,data_ring = phot_mask(map,rc,35,45,0)
         flux.append(get_flux(data_circle,data_ring))
-        rd = hdulist[1].data
-        #rd = rd.view(np.recarray)
-        redshift.append(rd) #FIXME
+        redshift.append(rd[0])
         k += 1
     return flux, redshift
     
@@ -208,23 +209,46 @@ patch ='patch_SZ/SZ/1441_PSZ2 G305.76+44.79.fits'
 #patch = 'patch_SZ/SZ/276_PSZ2 G066.26+20.82.fits'
 #patch = 'patch_SZ/SZ/348_PSZ2 G081.22-41.95.fits'
 #patch = 'patch_SZ/SZ/1592_PSZ2 G340.94+35.07.fits'
+
 data = pyfits.getdata(patch)
 n1,n2 = data.shape
 centre = (n1/2,n2/2)
 
 profile,rc = radial_profile(data,centre,1)
-print "rayon crit",rc
-#data_circle,data_ring = phot_mask(data,rc ,35,45,1)
-#flux = get_flux(data_circle,data_ring)
+#print "rayon crit",rc
+data_circle,data_ring = phot_mask(data,rc ,35,45,1)
+flux = get_flux(data_circle,data_ring)
 
 PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT, REDSHIFT = inout.coord_SZ(PSZ)
-n_cluster = 1321 #FIXME ne marche pas si moins (voir line in filename). 
-flux, redshift = do_photometry(n_cluster)
-#plt.figure()
-#plt.hist(redshift)
-#plt.show
 
+n_cluster = 1321 #FIXME 
+flux, redshift = do_photometry(n_cluster)
+l = 0
+rslt = np.zeros((len(flux),len(flux)))
+for i in range(len(redshift)):
+    if redshift[i] >= 0.01 \
+    and ma.isnan(flux[i]) == False \
+    and ma.isinf(flux[i]) == False: #FIXME
+        rslt[l][0]= redshift[i]
+        rslt[l][1]= flux[i]
+        l +=1
+n_cl = l
+
+#FIXME label
+bins_r = np.linspace(0., np.max(redshift), 40)
+bins_f = np.linspace(np.min(rslt[:,1]),
+                     np.max(rslt[:,1]), 40) #FIXME problem Nan
+color = ['b.','g.', 'r.', 'c.', 'm.', 'k.'] 
+fig   = plt.figure()
+ax    = fig.add_subplot(1, 1, 1)
+plt.subplot(2,2,1)
+plt.plot(rslt[:n_cl,0], rslt[:n_cl,1], color[2])
+plt.subplot(2,2,2)
+plt.hist(rslt[:n_cl,0], bins_r, facecolor='b')
+plt.subplot(2,2,3)
+plt.hist(rslt[:n_cl,1], bins_f, facecolor='g')
+plt.show()
 
 #frac_in,frac_out = lobe_frac(data,data_circle)
 #print "fracction du lobe dedans et dehors",frac_in, frac_out
