@@ -18,19 +18,32 @@ def coord_SZ(filename):
                                 GLON = galactic longitude
                                 GLAT = galactic latitude
     -----------------------------------------------------"""
-    cat  = pyfits.getdata(filename)
-    data = pytabs.Table(cat)
-    NAME = data['NAME']
-    GLON = data['GLON']
-    GLAT = data['GLAT']
-    return (NAME,GLON,GLAT)
+    cat      = pyfits.getdata(filename)
+    data     = pytabs.Table(cat)
+    NAME     = data['NAME']
+    GLON     = data['GLON']
+    GLAT     = data['GLAT']
+    REDSHIFT = data['REDSHIFT']
+    return (NAME,GLON,GLAT,REDSHIFT)
 
-def save_fits(name, patch,indice):
+def save_fits(name, redshift, patch,indice):
     path = "patch_SZ/SZ/"
     filename = path + str(indice+1)+'_' + name + ".fits"
     if os.path.isfile(filename) == 1:
-        os.remove(filename)    
-    pf.writeto(filename, patch.value)
+        os.remove(filename)
+    a = np.array([redshift])
+    hdu = pyfits.PrimaryHDU(patch.value)
+    hdulist = pyfits.HDUList([hdu])
+    col_1 = pyfits.Column(name='REDSHIFT', format='E', array=a)
+    cols = pyfits.ColDefs([col_1])
+    tbhdu = pyfits.BinTableHDU.from_columns(cols)
+    prihdr = pyfits.Header()
+    prihdr['COMMENT'] = "Here's some commentary about this FITS file."
+    prihdu = pyfits.PrimaryHDU(header=prihdr)
+    #pf.writeto(filename, patch.value)#, redshift)
+    #thdulist = pyfits.HDUList([prihdu, tbhdu])
+    hdulist.append(tbhdu)
+    hdulist.writeto(filename)
     return 0
 
 def plot_map(NAME, TSZ_map, CMB_KSZ_map):

@@ -28,7 +28,7 @@ n_obs          = 6               #Number of HFI maps Planck
 n_cluster      = args.n_cluster  #Number of cluster in catalog
 patch_size     = 100   
 PSZ = "PSZ2v1.fits"
-NAME,GLON,GLAT = inout.coord_SZ(PSZ)
+NAME,GLON,GLAT, REDSHIFT = inout.coord_SZ(PSZ)
 
 st_w          = np.zeros((n_cluster,n_obs)) #weight of selected patch
 st_w_excl     = np.zeros((n_cluster,n_obs)) #weight of excluded patch 
@@ -136,7 +136,7 @@ for k in range(n_cluster):
     else:
         GLAT_slct[l]   = GLAT[k]
         st_w[l,:]      = w_t
-        #inout.save_fits(NAME[k], TSZ_map,k)
+        inout.save_fits(NAME[k], REDSHIFT[k], TSZ_map, k)
         l += 1        
     #print k+1, ':', l+1, 'of', n_cluster, 'selected'
 n_slct = l

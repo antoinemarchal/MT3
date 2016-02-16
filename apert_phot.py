@@ -65,9 +65,9 @@ def phot_mask(data,r_circle,rin,rout,plot):
     data_rout[~mask_rout]    = 0
 
     data_ring =  data_rout - data_rin
-    
+
     if plot == 1: 
-        plt.figure(2)
+        plt.figure(1)
         plt.subplot(2,2,1)
         plt.imshow(data,origin = 'lower',interpolation = 'none')
         #plt.show()
@@ -80,7 +80,6 @@ def phot_mask(data,r_circle,rin,rout,plot):
         plt.subplot(2,2,4)
         plt.imshow(data_circle + data_ring,origin='lower',interpolation='none')
         plt.show()
-    
     
     return (data_circle,data_ring)
 ##################################################################
@@ -129,7 +128,7 @@ def radial_profile(data, center,plot):
     #### Calcul d'un rayon caracteristique rc :
     #### 90 % du flux en partant du centre
     threshold = 0.1
-    r_90 = np.where(radialprofile >= threshold) #FIXME
+    r_90 = np.where(radialprofile >= threshold)
     r_90 = np.asarray(r_90)
     r_90 = np.ravel(r_90)
     for i in range(len(r_90)-1):
@@ -138,17 +137,19 @@ def radial_profile(data, center,plot):
             break
         else:
             rc = np.max(r_90)
-            
-    if plot == 1 : 
-        fig = plt.figure(4)
-        ax = fig.add_subplot(1, 1, 1)
-        plt.plot(radialprofile)
-        plt.plot([rc, rc], [0,1], 'r--', lw=2)
-        plt.plot([0, 70], [threshold, threshold], 'g--', lw=2)
-        ax.axvspan(0, rc, alpha=0.4, color='grey')
-        plt.xlabel('Radius [pix]')
-        plt.ylabel('Flux')
-        #plt.show()
+
+    if plot == 1 :
+        style = 'grayscale'
+        with plt.style.context(style, after_reset=True):
+            fig = plt.figure(2)
+            ax = fig.add_subplot(1, 1, 1)
+            plt.plot(radialprofile, 'b')
+            plt.plot([rc, rc], [0,1], 'r--', lw=2)
+            plt.plot([0, 70], [threshold, threshold], 'g--', lw=2)
+            ax.axvspan(0, rc, alpha=0.4, color='grey')
+            plt.xlabel('Radius [pix]')
+            plt.ylabel('Flux')
+    #plt.show()
     return (radialprofile,rc) 
 
 #######################################################
@@ -156,47 +157,49 @@ def radial_profile(data, center,plot):
 def get_flux(data_circle,data_ring):
 #retourne la valeur du flux de la cource en tenant compte 
 #du bruit moyen dans l'anneau
-	raw_flux =  np.sum (data_circle)
+    raw_flux =  np.sum (data_circle)
 
-	pixel_ring =np. where(data_ring > 0 )
-	pixel_ring = np.ravel(pixel_ring)
-	npixel_ring = len(pixel_ring)
-	
-	pixel_circle = np.where(data_circle > 0 )
-	pixel_circle = np.ravel(pixel_circle)
-	npixel_circle = len(pixel_circle)
-
-	avg_bckd = np.sum(data_ring)/npixel_ring
-	
-	flux = raw_flux - npixel_circle*avg_bckd
-
-	return flux,npixel_circle,npixel_ring
+    pixel_ring =np. where(data_ring > 0 )
+    pixel_ring = np.ravel(pixel_ring)
+    npixel_ring = len(pixel_ring)
+    
+    pixel_circle = np.where(data_circle > 0 )
+    pixel_circle = np.ravel(pixel_circle)
+    npixel_circle = len(pixel_circle)
+    
+    avg_bckd = np.sum(data_ring)/npixel_ring
+    
+    flux = raw_flux - npixel_circle*avg_bckd
+    
+    return flux#,npixel_circle,npixel_ring
 #######################################################
 
-def do_photometry():
-	
-	filenames =  open ("patch_SZ/SZ/filenames.txt")
-	path = "patch_SZ/SZ/"
-        k = 0
-	for line in filenames:
-            inout.progress(k, 1320, 'Cluster')
-	    patch = path + line.strip()
-	    data = pyfits.getdata(patch)
-	    n1,n2 = data.shape
-	    centre = (n1/2,n2/2)
-	    profile,rc = radial_profile(data,centre,0)
-	    #print rc
-	    ##FIXME
-	    ##modifier les valeur de rayon pour les anneaux
-	    ### !!!! ne jamais metre 1 en dernier argument####
-	    data_circle,data_ring = phot_mask(data,rc,35,45,0)
-	    flux =  get_flux(data_circle,data_ring)
-            k +=1
-	return 0 
-
-
-
-
+def do_photometry(n_cluster):
+    filenames =  open ("patch_SZ/SZ/filenames.txt")
+    path = "patch_SZ/SZ/"
+    k = 0
+    flux      = []
+    redshift  = []
+    for line in filenames:
+        inout.progress(k, n_cluster, 'Cluster')
+	patch      = path + line.strip()
+	data       = pyfits.getdata(patch)
+        hdulist    = pyfits.open(patch)
+	n1,n2      = data.shape
+	centre     = (n1/2,n2/2)
+	profile,rc = radial_profile(data,centre,0)
+	#print rc
+	##FIXME
+	##modifier les valeur de rayon pour les anneaux
+	### !!!! ne jamais metre 1 en dernier argument####
+	data_circle,data_ring = phot_mask(data,rc,35,45,0)
+        flux.append(get_flux(data_circle,data_ring))
+        rd = hdulist[1].data
+        #rd = rd.view(np.recarray)
+        redshift.append(rd) #FIXME
+        k += 1
+    return flux, redshift
+    
 patch ='patch_SZ/SZ/1441_PSZ2 G305.76+44.79.fits'
 #patch = 'patch_SZ/SZ/121_PSZ2 G033.97-76.61.fits'
 #patch = 'patch_SZ/SZ/276_PSZ2 G066.26+20.82.fits'
@@ -208,11 +211,16 @@ centre = (n1/2,n2/2)
 
 profile,rc = radial_profile(data,centre,1)
 print "rayon crit",rc
-data_circle,data_ring = phot_mask(data,rc ,35,45,1)
+#data_circle,data_ring = phot_mask(data,rc ,35,45,1)
+#flux = get_flux(data_circle,data_ring)
 
-flux = get_flux(data_circle,data_ring)
-
-a = do_photometry()
+PSZ = "PSZ2v1.fits"
+NAME,GLON,GLAT, REDSHIFT = inout.coord_SZ(PSZ)
+n_cluster = 1321 #FIXME ne marche pas si moins (voir line in filename). 
+flux, redshift = do_photometry(n_cluster)
+#plt.figure()
+#plt.hist(redshift)
+#plt.show
 
 
 #frac_in,frac_out = lobe_frac(data,data_circle)
