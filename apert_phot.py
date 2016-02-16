@@ -122,11 +122,13 @@ def radial_profile(data, center,plot):
     radialprofile = tbin / nr
     
     #Normalisation
+	#la normalisation me parait bidon
     radialprofile = (radialprofile - np.min(radialprofile)) \
                     / (np.max(radialprofile) - np.min(radialprofile))
                            
     #### Calcul d'un rayon caracteristique rc :
     #### 90 % du flux en partant du centre
+	##valeur seuil a discuter...
     threshold = 0.1
     r_90 = np.where(radialprofile >= threshold)
     r_90 = np.asarray(r_90)
@@ -136,6 +138,7 @@ def radial_profile(data, center,plot):
             rc = r_90[i]
             break
         else:
+	#discutable si profile non monotone
             rc = np.max(r_90)
 
     if plot == 1 :
