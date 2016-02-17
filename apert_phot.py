@@ -185,6 +185,7 @@ def do_photometry(n_cluster):
     k = 0
     flux      = []
     redshift  = []
+    MSZ       = []
     for line in filenames:
         inout.progress(k, n_cluster, 'Cluster')
 	patch      = path + line.strip()
@@ -192,6 +193,7 @@ def do_photometry(n_cluster):
         cat        = pyfits.getdata(patch,1)
         hdr        = pytabs.Table(cat)
         rd         = hdr['REDSHIFT']
+        masse      = hdr['MSZ']
     	n1,n2      = data.shape
 	centre     = (n1/2,n2/2)
 	profile,rc = radial_profile(data,centre,0)
@@ -209,8 +211,9 @@ def do_photometry(n_cluster):
         #if rc <=13 : 
         flux.append(get_flux(data_circle,data_ring))
         redshift.append(rd[0])
+        MSZ.append(masse[0])
         k += 1
-    return flux, redshift
+    return flux, redshift, MSZ
     
 
 #**************************************************************************
@@ -220,23 +223,29 @@ def do_photometry(n_cluster):
 
 
 PSZ = "PSZ2v1.fits"
-NAME,GLON,GLAT, REDSHIFT = inout.coord_SZ(PSZ)
+NAME,GLON,GLAT, REDSHIFT, MSZ = inout.coord_SZ(PSZ)
 
 n_cluster = 1391  
-flux, redshift = do_photometry(n_cluster)
+flux, redshift, MSZ = do_photometry(n_cluster)
 l = 0
-rslt = np.zeros((len(flux),len(flux)))
+rslt     = np.zeros((len(flux),len(flux)))
+sort_MSZ = np.zeros((len(flux)))
 for i in range(len(redshift)):
-    if redshift[i] >= 0.:
+    if redshift[i] >= 0. and MSZ[i] != 0. :
         rslt[l][0]= redshift[i]
         rslt[l][1]= flux[i]
+        sort_MSZ[l] = MSZ[i]
         l +=1
 n_cl = l
+print n_cl
+#FIXME look mass/redshift unknow ident?
 
 moy   = np.mean(rslt[:,1])
-std = np.std(rslt[:,1])
+std   = np.std(rslt[:,1])
 out_rslt = np.zeros((n_cl,n_cl))
 in_rslt  = np.zeros((n_cl,n_cl))
+in_msz   = np.zeros((n_cl))
+out_msz  = np.zeros((n_cl))
 j = 0
 l = 0
 for i in range(n_cl):
@@ -244,10 +253,12 @@ for i in range(n_cl):
     if RD > 1.:
         out_rslt[j][0]=rslt[i][0]
         out_rslt[j][1]=rslt[i][1]
+        out_msz[j]    =sort_MSZ[i]
         j += 1
     else:
         in_rslt[l][0]=rslt[i][0]
         in_rslt[l][1]=rslt[i][1]
+        in_msz[l]    =sort_MSZ[i]
         l += 1
 n_in  = l
 n_out = j
@@ -258,31 +269,44 @@ print str(n_out) + 'Cluster excluded'
 """----------Plot/Results Study flow/redshift------------"""
 bins_r = np.linspace(0., np.max(in_rslt[:,0]), 40)
 bins_f = np.linspace(np.min(in_rslt[:,1]),
-                     np.max(in_rslt[:,1]), 40) #FIXME problem Nan
+                     np.max(in_rslt[:,1]), 40)
+bins_m = np.linspace(np.min(in_msz),
+                     np.max(in_msz), 40)
 color = ['b.','g.', 'r.', 'c.', 'm.', 'k.', 'y.'] 
 fig   = plt.figure()
 ax    = fig.add_subplot(1, 1, 1)
-plt.subplot(2,2,1)
+plt.subplot(2,3,1)
 plt.xlabel('z')
 plt.ylabel('Flux')
 plt.plot(in_rslt[:n_in,0], in_rslt[:n_in,1], color[2],
          out_rslt[:n_out,0], out_rslt[:n_out,1], color[6])
 
-plt.subplot(2,2,2)
+plt.subplot(2,3,2)
 plt.xlabel('z')
 plt.ylabel('Flux')
 plt.plot(in_rslt[:n_in,0], in_rslt[:n_in,1], color[2])
 
-plt.subplot(2,2,3)
+plt.subplot(2,3,3)
 plt.xlabel('Flux')
 plt.ylabel('N cluster')
 plt.hist(in_rslt[:n_in,1], bins_f, facecolor='g')
 plt.plot([moy, moy], [0,85], 'r--', lw=2)
 
-plt.subplot(2,2,4)
+plt.subplot(2,3,4)
 plt.xlabel('z')
 plt.ylabel('N cluster')
 plt.hist(in_rslt[:n_in,0], bins_r, facecolor='b')
+
+plt.subplot(2,3,5)
+plt.xlabel('M [10^14 solar mass FIXME]')
+plt.ylabel('Flux')
+plt.plot(in_msz[:n_in], in_rslt[:n_in,1], color[4],
+         out_msz[:n_in], out_rslt[:n_in,1], color[6])
+
+plt.subplot(2,3,6)
+plt.xlabel('M [10^14 solar mass FIXME]')
+plt.ylabel('N cluster')
+plt.hist(in_msz[:n_in], bins_m, facecolor='c')
 
 plt.savefig('results/study_flow.png')
 plt.show()

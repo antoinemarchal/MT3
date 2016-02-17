@@ -24,18 +24,21 @@ def coord_SZ(filename):
     GLON     = data['GLON']
     GLAT     = data['GLAT']
     REDSHIFT = data['REDSHIFT']
-    return (NAME,GLON,GLAT,REDSHIFT)
+    MSZ      = data['MSZ']
+    return (NAME,GLON,GLAT,REDSHIFT,MSZ)
 
-def save_fits(name, redshift, patch,indice):
+def save_fits(name, redshift, masse, patch,indice):
     path = "patch_SZ/SZ/"
     filename = path + str(indice+1)+'_' + name + ".fits"
     if os.path.isfile(filename) == 1:
         os.remove(filename)
     a        = np.array([redshift])
+    b        = np.array([masse])
     hdu      = pyfits.PrimaryHDU(patch.value)
     hdulist  = pyfits.HDUList([hdu])
     col_1    = pyfits.Column(name='REDSHIFT', format='E', array=a)
-    cols     = pyfits.ColDefs([col_1])
+    col_2    = pyfits.Column(name='MSZ', format='E', array=b)
+    cols     = pyfits.ColDefs([col_1,col_2])
     tbhdu    = pyfits.BinTableHDU.from_columns(cols)
     prihdr   = pyfits.Header()
     prihdr['COMMENT'] = "Commentary fixme"
