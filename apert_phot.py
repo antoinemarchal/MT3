@@ -6,312 +6,107 @@ import in_output as inout
 import numpy.ma as ma
 import math as ma
 import astropy.table as pytabs
+import mod_ap as ap
+import pickle
 
+n_cluster = 1391
+files = "patch_SZ/SZ/filenames.txt"
+path  = "patch_SZ/SZ/"
 
+r_in      = 35 #FIXME between rc and shape image
+r_out     = 45
+threshold = 0.4
 
-def sector_mask(shape,centre,radius,angle_range):
-    
-    #retourne un masque booleen sur un secteur circulaire
-    #shape      = data.shape
-    #centre      = tuple
-    #angle_range = tuple
-    
-    x,y = np.ogrid[:shape[0],:shape[1]]
-    cx,cy = centre
-    tmin,tmax = np.deg2rad(angle_range)
+flux, redshift, MSZ = ap.do_photometry(
+    n_cluster, files, path, r_in, r_out, threshold
+)
 
-    # mensure stop angle > start angle
-    if tmax < tmin:
-            tmax += 2*np.pi
+sort_redshift = []
+sort_flux     = []
+sort_msz      = []
 
-    # convert cartesian --> polar coordinates
-    r2 = (x-cx)*(x-cx) + (y-cy)*(y-cy)
-    theta = np.arctan2(x-cx,y-cy) - tmin
-
-    # wrap angles between 0 and 2*pi
-    theta %= (2*np.pi)
-
-    # circular mask
-    circmask = r2 <= radius*radius
-
-    # angular mask
-    anglemask = theta <= (tmax-tmin)
-
-    return circmask*anglemask
-#####################################################################
-
-def phot_mask(data,r_circle,rin,rout,plot):
-# data     = donnees extraites du patch
-#r_circle  = rayon du cercle
-#rin       = rayon interne de l'anneau
-#rout      = rayon externe de l'anneau
-#plot      = 1 ou 0 si =o on trace rien
-
-   
-    data_f = data
-    data_circle = np.copy(data)
-    data_rin = np.copy(data)
-    data_rout = np.copy(data)
-    
-    centre_x,centre_y = data.shape
-    x = centre_x/2
-    y = centre_y/2
-    
-    mask_circle = sector_mask(data_circle.shape,(x,y),r_circle,(0,360))
-    mask_rin    = sector_mask(data_rin.shape,(x,y),rin,(0,360))
-    mask_rout   = sector_mask(data_rout.shape,(x,y),rout,(0,360))
-
-    data_circle[~mask_circle]= 0
-    data_rin[~mask_rin]      = 0 
-    data_rout[~mask_rout]    = 0
-
-    data_ring =  data_rout - data_rin
-
-    if plot == 1: 
-        plt.figure(1)
-        plt.subplot(2,2,1)
-        plt.imshow(data,origin = 'lower',interpolation = 'none')
-        #plt.show()
-        plt.subplot(2,2,2)
-        plt.imshow(data_circle,origin = 'lower',interpolation = 'none')
-        #plt.show()
-        plt.subplot(2,2,3)
-        plt.imshow(data_ring,origin = 'lower',interpolation = 'none')
-        #plt.show()
-        plt.subplot(2,2,4)
-        plt.imshow(data_circle + data_ring,origin='lower',interpolation='none')
-        plt.show()
-    
-    return (data_circle,data_ring)
-##################################################################
-
-def lobe_frac(data,data_circle):
-    # retourne la fraction du signal SZ contenu dans et a l'exterieure
-    # de rayon r_in
-    #data          = patch complet 
-    #data_circle   = ouverture photometrique
-    #data_ring     = anneau autour de l'ouverture photometrique
-
-    tot =np.sum(data)
-    int = np.sum(data_circle)
-
-    frac_in = int/tot
-    frac_out = 1-frac_in
-    
-    return (frac_in,frac_out) 
-##################################################################
-
-def area(data_circle, data_ring):
-    #retourne les valeurs des surfaces en pixels a l'interieure de
-    # l'anneau et de l'ouverture circulaire.
-
-    area_circle = np.count_nonzero(data_circle)
-    area_ring   = np.count_nonzero(data_ring)
-    
-    return (area_circle,area_ring)
-
-###################################################################
-def radial_profile(data, center,plot):
-    y, x = np.indices((data.shape))
-    r = np.sqrt((x - center[0])**2 + (y - center[1])**2)
-    
-    #convert r to int ==> definit la taille du bin
-    r = r.astype(np.int)
-
-    tbin = np.bincount(r.ravel(), data.ravel())
-    nr = np.bincount(r.ravel())
-    radialprofile = tbin / nr
-    
-    #Normalisation
-	#la normalisation me parait bidon
-    radialprofile = (radialprofile - np.min(radialprofile)) \
-                    / (np.max(radialprofile) - np.min(radialprofile))
-                           
-    #### Calcul d'un rayon caracteristique rc :
-    #### 60 % du flux en partant du centre
-	##valeur seuil a discuter...
-    threshold = 0.4
-    r_60 = np.where(radialprofile >= threshold)
-    r_60 = np.asarray(r_60)
-    r_60 = np.ravel(r_60)
-    for i in range(len(r_60)-1):
-        if r_60[i+1] != r_60[i]+1:
-            rc = r_60[i]
-            break
-        else:
-	#discutable si profile non monotone
-            rc = np.max(r_60)
-
-    if plot == 1 :
-        style = 'grayscale'
-        with plt.style.context(style, after_reset=True):
-            fig = plt.figure(2)
-            ax = fig.add_subplot(1, 1, 1)
-            plt.plot(radialprofile, 'b')
-            plt.plot([rc, rc], [0,1], 'r--', lw=2)
-            plt.plot([0, 70], [threshold, threshold], 'g--', lw=2)
-            ax.axvspan(0, rc, alpha=0.4, color='grey')
-            plt.xlabel('Radius [pix]')
-            plt.ylabel('Flux')
-    #plt.show()
-    return (radialprofile,rc) 
-
-#######################################################
-
-def get_flux(data_circle,data_ring):
-#retourne la valeur du flux de la cource en tenant compte 
-#du bruit moyen dans l'anneau
-    raw_flux =  np.sum (data_circle)
-
-    pixel_ring =np.where(data_ring != 0 )
-    pixel_ring = np.ravel(pixel_ring)
-    npixel_ring = len(pixel_ring)
-   
-    
-    pixel_circle = np.where(data_circle != 0 )
-    pixel_circle = np.ravel(pixel_circle)
-    npixel_circle = len(pixel_circle)
-
-    avg_bckd = np.sum(data_ring)/npixel_ring
-    
-    flux = raw_flux - npixel_circle*avg_bckd
-    
-    return flux#,npixel_circle,npixel_ring
-#######################################################
-
-def do_photometry(n_cluster):
-    filenames =  open ("patch_SZ/SZ/filenames.txt")
-    path = "patch_SZ/SZ/"
-    k = 0
-    flux      = []
-    redshift  = []
-    MSZ       = []
-    for line in filenames:
-        inout.progress(k, n_cluster, 'Cluster')
-	patch      = path + line.strip()
-	data       = pyfits.getdata(patch)
-        cat        = pyfits.getdata(patch,1)
-        hdr        = pytabs.Table(cat)
-        rd         = hdr['REDSHIFT']
-        masse      = hdr['MSZ']
-    	n1,n2      = data.shape
-	centre     = (n1/2,n2/2)
-	profile,rc = radial_profile(data,centre,0)
-       
-	##FIXME
-	##modifier les valeur de rayon pour les anneaux
-	### !!!! ne jamais metre 1 en dernier argument####
-	data_circle,data_ring = phot_mask(data,rc,35,45,0)
-        pouet = get_flux(data_circle,data_ring)
-        #if pouet >= 0.03 :
-        #    plt.figure()
-        #    plt.imshow(data_circle)
-        #    plt.show()
-        
-        #if rc <=13 : 
-        flux.append(get_flux(data_circle,data_ring))
-        redshift.append(rd[0])
-        MSZ.append(masse[0])
-        k += 1
-    return flux, redshift, MSZ
-    
-
-#**************************************************************************
-#**************************************************************************
-#**************************************************************************
-#**************************************************************************
-
-
-PSZ = "PSZ2v1.fits"
-NAME,GLON,GLAT, REDSHIFT, MSZ = inout.coord_SZ(PSZ)
-
-n_cluster = 1391  
-flux, redshift, MSZ = do_photometry(n_cluster)
 l = 0
-rslt     = np.zeros((len(flux),len(flux)))
-sort_MSZ = np.zeros((len(flux)))
 for i in range(len(redshift)):
     if redshift[i] >= 0. and MSZ[i] != 0. :
-        rslt[l][0]= redshift[i]
-        rslt[l][1]= flux[i]
-        sort_MSZ[l] = MSZ[i]
+        sort_redshift.append(redshift[i])
+        sort_flux.append(flux[i])
+        sort_msz.append(MSZ[i])
         l +=1
 n_cl = l
-print n_cl
 #FIXME look mass/redshift unknow ident?
 
-moy   = np.mean(rslt[:,1])
-std   = np.std(rslt[:,1])
-out_rslt = np.zeros((n_cl,n_cl))
-in_rslt  = np.zeros((n_cl,n_cl))
-in_msz   = np.zeros((n_cl))
-out_msz  = np.zeros((n_cl))
+moy   = np.mean(sort_flux)
+std   = np.std(sort_flux)
+
+RD_in_redshift  = []
+RD_out_redshift = []
+RD_in_flux      = []
+RD_out_flux     = []
+RD_in_msz       = []
+RD_out_msz      = []
+
 j = 0
 l = 0
 for i in range(n_cl):
-    RD = np.absolute((rslt[i][1]-moy) / std)
-    if RD > 1.:
-        out_rslt[j][0]=rslt[i][0]
-        out_rslt[j][1]=rslt[i][1]
-        out_msz[j]    =sort_MSZ[i]
+    RD = np.absolute((sort_flux[i]-moy) / std)
+    if RD > 2.:
+        RD_out_redshift.append(sort_redshift[i])
+        RD_out_flux.append(sort_flux[i])
+        RD_out_msz.append(sort_msz[i])
         j += 1
     else:
-        in_rslt[l][0]=rslt[i][0]
-        in_rslt[l][1]=rslt[i][1]
-        in_msz[l]    =sort_MSZ[i]
+        RD_in_redshift.append(sort_redshift[i])
+        RD_in_flux.append(sort_flux[i])
+        RD_in_msz.append(sort_msz[i])
         l += 1
+
 n_in  = l
 n_out = j
 print '-'
 print str(n_in)  + 'Cluster selected'
 print str(n_out) + 'Cluster excluded'
 
-"""----------Plot/Results Study flow/redshift------------"""
-bins_r = np.linspace(0., np.max(in_rslt[:,0]), 40)
-bins_f = np.linspace(np.min(in_rslt[:,1]),
-                     np.max(in_rslt[:,1]), 40)
-bins_m = np.linspace(np.min(in_msz),
-                     np.max(in_msz), 40)
-color = ['b.','g.', 'r.', 'c.', 'm.', 'k.', 'y.'] 
-fig   = plt.figure()
-ax    = fig.add_subplot(1, 1, 1)
-plt.subplot(2,3,1)
-plt.xlabel('z')
-plt.ylabel('Flux')
-plt.plot(in_rslt[:n_in,0], in_rslt[:n_in,1], color[2],
-         out_rslt[:n_out,0], out_rslt[:n_out,1], color[6])
+"""---------------------------------------------------
+---Save results
+---------------------------------------------------"""
+with open('results/sort_redshift.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(sort_redshift)
+output.close()
+with open('results/sort_flux.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(sort_flux)
+output.close()
+with open('results/sort_msz.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(sort_msz)
+output.close()
 
-plt.subplot(2,3,2)
-plt.xlabel('z')
-plt.ylabel('Flux')
-plt.plot(in_rslt[:n_in,0], in_rslt[:n_in,1], color[2])
+with open('results/RD_in_redshift.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(RD_in_redshift)
+output.close()
+with open('results/RD_in_flux.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(RD_in_flux)
+output.close()
+with open('results/RD_in_msz.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(RD_in_msz)
+output.close()
 
-plt.subplot(2,3,3)
-plt.xlabel('Flux')
-plt.ylabel('N cluster')
-plt.hist(in_rslt[:n_in,1], bins_f, facecolor='g')
-plt.plot([moy, moy], [0,85], 'r--', lw=2)
-
-plt.subplot(2,3,4)
-plt.xlabel('z')
-plt.ylabel('N cluster')
-plt.hist(in_rslt[:n_in,0], bins_r, facecolor='b')
-
-plt.subplot(2,3,5)
-plt.xlabel('M [10^14 solar mass FIXME]')
-plt.ylabel('Flux')
-plt.plot(in_msz[:n_in], in_rslt[:n_in,1], color[4],
-         out_msz[:n_in], out_rslt[:n_in,1], color[6])
-
-plt.subplot(2,3,6)
-plt.xlabel('M [10^14 solar mass FIXME]')
-plt.ylabel('N cluster')
-plt.hist(in_msz[:n_in], bins_m, facecolor='c')
-
-plt.savefig('results/study_flow.png')
-plt.show()
-
-
+with open('results/RD_out_redshift.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(RD_out_redshift)
+output.close()
+with open('results/RD_out_flux.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(RD_out_flux)
+output.close()
+with open('results/RD_out_msz.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(RD_out_msz)
+output.close()
 
 ##################################################################################################
 # sources SZ non centrees ==> cercle photometrique bcp trop grand
