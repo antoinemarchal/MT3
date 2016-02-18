@@ -9,7 +9,7 @@ import astropy.table as pytabs
 import mod_ap as ap
 import pickle
 
-n_cluster = 1391
+n_cluster = 1321
 files = "patch_SZ/SZ/filenames.txt"
 path  = "patch_SZ/SZ/"
 

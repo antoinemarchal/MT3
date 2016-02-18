@@ -26,7 +26,8 @@ if args.n_cluster > 1653:
 
 n_obs          = 6               #Number of HFI maps Planck
 n_cluster      = args.n_cluster  #Number of cluster in catalog
-patch_size     = 200   
+patch_size     = 100
+
 PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT, REDSHIFT, MSZ = inout.coord_SZ(PSZ)
 
@@ -96,12 +97,17 @@ for i in range(n_obs) :
    ILC method.
    --------------------------------------------"""
 print "Creating patches of SZ effect : "
+filename = "patch_SZ/SZ/filenames.txt"
+if os.path.isfile(filename) == 1:
+    os.remove(filename)
+fichier = open(filename, "a")
+
 moy_w_slct = []
 std_w_slct = []
 j = 0
 l = 0
 for k in range(n_cluster):
-    inout.progress(k, n_cluster, 'Cluster selected = '+str(l))
+    inout.progress(k, n_cluster, 'Cluster selected = '+str(l+1))
     #Compute results of separation and weight for
     #each cluster.
     sys.stdout = open(os.devnull, "w")
@@ -137,10 +143,12 @@ for k in range(n_cluster):
         GLAT_slct[l]   = GLAT[k]
         st_w[l,:]      = w_t
         inout.save_fits(NAME[k], REDSHIFT[k], MSZ[k], TSZ_map, k)
-        l += 1        
-    #print k+1, ':', l+1, 'of', n_cluster, 'selected'
+        fichier.write(str(k+1)+'_'
+                      + NAME[k] + ".fits"+"\n")
+        l += 1
 n_slct = l
 n_excl = j
+fichier.close()
 #with open('weight.dat', 'wb') as output:
 #    mon_pickler = pickle.Pickler(output)
 #    mon_pickler.dump(st_w)
@@ -157,7 +165,6 @@ if args.plot:
     print "Results :"
     #Plot of weight histogram and GLAT correlation
     #Plot of comparison with average weight of other group
-
     inout.plot_w_hist(
         GLAT_slct, st_w, n_slct, 'ggplot'
     )
