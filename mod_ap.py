@@ -6,7 +6,7 @@ import in_output as inout
 import numpy.ma as ma
 import math as ma
 import astropy.table as pytabs
-import mod_ap as ap
+
 
 def sector_mask(shape,centre,radius,angle_range):
     #retourne un masque booleen sur un secteur circulaire
@@ -60,12 +60,12 @@ def phot_mask(data,r_circle,rin,rout,plot):
     mask_rout   = sector_mask(data_rout.shape,(x,y),rout,(0,360))
 
     data_circle[~mask_circle]= 0
-    data_rin[~mask_rin]      = 0 
+    data_rin[~mask_rin]      = 0
     data_rout[~mask_rout]    = 0
 
     data_ring =  data_rout - data_rin
 
-    if plot == 1: 
+    if plot == 1:  
         plt.figure(1)
         plt.subplot(2,2,1)
         plt.imshow(data,origin = 'lower',interpolation = 'none')
@@ -81,22 +81,7 @@ def phot_mask(data,r_circle,rin,rout,plot):
         plt.show()
     
     return (data_circle,data_ring)
-##################################################################
 
-def lobe_frac(data,data_circle):
-    # retourne la fraction du signal SZ contenu dans et a l'exterieure
-    # de rayon r_in
-    #data          = patch complet 
-    #data_circle   = ouverture photometrique
-    #data_ring     = anneau autour de l'ouverture photometrique
-
-    tot =np.sum(data)
-    int = np.sum(data_circle)
-
-    frac_in = int/tot
-    frac_out = 1-frac_in
-    
-    return (frac_in,frac_out) 
 ##################################################################
 
 def area(data_circle, data_ring):
@@ -110,6 +95,8 @@ def area(data_circle, data_ring):
 
 ###################################################################
 def radial_profile(data, center, threshold ,plot):
+    #center is the center of the data patch
+    
     y, x = np.indices((data.shape))
     r = np.sqrt((x - center[0])**2 + (y - center[1])**2)
     
@@ -121,9 +108,9 @@ def radial_profile(data, center, threshold ,plot):
     radialprofile = tbin / nr
     
     #Normalisation
-	#la normalisation me parait bidon
-    radialprofile = (radialprofile - np.min(radialprofile)) \
-                    / (np.max(radialprofile) - np.min(radialprofile))
+    med = np.median(data)
+    radialprofile = (radialprofile - med) \
+                    / (np.max(radialprofile) - med)
                            
     #### Calcul d'un rayon caracteristique rc :
     #### 60 % du flux en partant du centre
@@ -131,13 +118,16 @@ def radial_profile(data, center, threshold ,plot):
     r_60 = np.where(radialprofile >= threshold)
     r_60 = np.asarray(r_60)
     r_60 = np.ravel(r_60)
+
+   # plt.plot(radialprofile)
+   # plt.show()
     for i in range(len(r_60)-1) :
         if r_60[i+1] != r_60[i]+1 :
             rc = r_60[i]
             break
         else:
-	#discutable si profile non monotone
             rc = np.max(r_60)
+    
 
     if plot == 1 :
         style = 'grayscale'
@@ -176,7 +166,7 @@ def get_flux(data_circle,data_ring):
     return flux
 #######################################################
 
-def do_photometry(n_cluster, files, path, r_in, r_out, threshold):
+def do_photometry(n_cluster, files, path, r_in, r_out, threshold,plot):
     filenames =  open (files)
     k = 0
     flux      = []
@@ -192,22 +182,61 @@ def do_photometry(n_cluster, files, path, r_in, r_out, threshold):
         masse      = hdr['MSZ']
     	n1,n2      = data.shape
 	centre     = (n1/2,n2/2)
-	profile,rc = radial_profile(data,centre,threshold,0)
-       
-	##FIXME
-	##modifier les valeur de rayon pour les anneaux
-	### !!!! ne jamais metre 1 en dernier argument####
-	data_circle,data_ring = phot_mask(data,rc,r_in,r_out,0)
-        pouet = get_flux(data_circle,data_ring)
-        #if pouet >= 0.03 :
-        #plt.figure()
-        #plt.imshow(data)
-        #plt.show()
         
-        if rc <=  r_in : 
-            flux.append(get_flux(data_circle,data_ring))
-            redshift.append(rd[0])
-            MSZ.append(masse[0])
+        # centre de la source  = max(source)
+        # in case there's a secondary source on the patch
+        # we define  a preliminary circle around the center
+        
+        preliminary_circle = np.copy(data)
+        mask = sector_mask(data.shape,centre,15,(0,360))
+
+        # si on met 0 ca pose pb pour la detection du
+        # max 
+        preliminary_circle[~mask]= -1
+            
+        max_source = np.where(data == np.max(preliminary_circle))
+        max_source = np.asarray(max_source)
+        
+        x_centre = np.mean(max_source[:,0])
+        y_centre = np.mean(max_source[:,1])
+        centre_source = [x_centre,y_centre]
+
+        #print centre_source
+	profile,rc = radial_profile(data,centre_source,threshold,0)
+        
+	data_circle,data_ring = phot_mask(data,rc,r_in,r_out,0)
+       
+
+        if plot ==1:
+            plt.subplot(2,2,1)
+            plt.imshow(data,origin = 'lower',interpolation = 'none')
+            
+            plt.subplot(2,2,3)
+            plt.plot(profile, 'b')
+            plt.plot([rc, rc], [0,1], 'r--', lw=2)
+            plt.plot([0, 200], [threshold, threshold], 'g--', lw=2)
+            plt.xlabel('Radius [pix]')
+            plt.ylabel('Flux')
+            plt.show()
+       # if rc <=  r_in : 
+       #     flux.append(get_flux(data_circle,data_ring))
+       #     redshift.append(rd[0])
+       #     MSZ.append(masse[0])
         k += 1
     return flux, redshift, MSZ
     
+
+
+" ***************************************************************** "
+" **************************************************************** "
+" ***************************************************************** "
+
+
+"""files = "patch_SZ/SZ/filenames.txt"
+path  = "patch_SZ/SZ/"
+r_in      = 35 #FIXME between rc and shape image
+r_out     = 45
+threshold = 0.4
+n_cluster = 1321
+
+a = do_photometry(n_cluster, files, path, r_in, r_out, threshold,0)"""
