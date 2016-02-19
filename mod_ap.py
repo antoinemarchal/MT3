@@ -143,7 +143,7 @@ def radial_profile(data, center, threshold ,plot):
             ax.axvspan(0, rc, alpha=0.4, color='grey')
             plt.xlabel('Radius [pix]')
             plt.ylabel('Flux')
-    plt.show()
+            plt.show()
     return (radialprofile,rc) 
 
 #######################################################

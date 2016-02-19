@@ -38,18 +38,53 @@ n_cl = l
 k = 0
 
 ar_rc = np.asarray(slct_rcrit)
+rp = np.asarray(slct_rp)
+rc = 0 
 for k in range(np.max(slct_rcrit)) :
-    index = np.where(ar_rc == k)
-    print index
-    for j in range(len(index)) : 
-        if j == 0 : 
-            r_moy[k] =  
-        else :
-            r_moy[k] = np.vstack(())
-    
-profil_tot = np.median(slct_rp, axis=0)
+    indexes = np.where(ar_rc == k)
+    indexes = np.asarray(indexes)
+    n1,n2 = indexes.shape
+    print n1,n2
 
-plt.plot(profil_tot)
+    #retirer la premiere ligne a la sortie du bloc 
+    if k == 0 :
+        med_profile = np.zeros([1,150])
+    
+    if n2 == 0 :
+        print 'OOOOO'
+        med_profile_temp = np.zeros([1,150]) 
+        med_profile = np.vstack((med_profile,med_profile_temp))
+        rc = rc + 1
+        continue
+    
+    rp_rc = rp[indexes,:]
+    rp_rc = rp_rc.reshape(n2,150)
+    
+    test_1d = 0
+    for j in range(n2) :
+        if j == 0 :
+           matrix_rc = rp_rc[0,:]
+           test_1d = 1  
+        else:
+            test_1d = 0
+            matrix_rc = np.vstack((matrix_rc,rp_rc[j,:]))
+            
+    print matrix_rc.shape
+
+    if test_1d == 1 :
+        med_profile_temp = matrix_rc
+    else : 
+        med_profile_temp = np.median(matrix_rc, axis = 0)
+        
+    print med_profile_temp.shape,med_profile.shape, 'KK = ',k
+ 
+    med_profile = np.vstack((med_profile,med_profile_temp))
+
+ ##  retire la premiere ligne de 0 de l'initialisation
+med_profile = med_profile[1:,:]
+
+for i in range(20):
+    plt.plot(med_profile[i,:])
 plt.show()
 
 moy   = np.mean(slct_flux)
