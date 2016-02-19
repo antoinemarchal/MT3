@@ -25,7 +25,7 @@ bins_f = np.linspace(np.min(slct_flux),
 bins_m = np.linspace(np.min(slct_msz),
                      np.max(slct_msz), 40)
 bins_rc = np.linspace(np.min(slct_rcrit),
-                     np.max(slct_rcrit), 40)
+                      np.max(slct_rcrit), 32)
 color = ['b.','g.', 'r.', 'c.', 'm.', 'k.', 'y.'] 
 fig_1   = plt.figure()#figsize=(16,9))
 ax_1    = fig_1.add_subplot(1, 1, 1)
@@ -82,7 +82,7 @@ plt.ylabel('$R_c$')
 plt.plot(slct_redshift, slct_rcrit, color[0])
 
 plt.subplot(2,2,4)
-plt.xlabel('$r_c$')
+plt.xlabel('$R_c$')
 plt.ylabel('$N$')
 plt.hist(slct_rcrit, bins_rc,
             histtype='step', color='g')

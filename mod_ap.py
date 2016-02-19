@@ -162,7 +162,7 @@ def get_flux(data_circle,data_ring):
     pixel_circle = np.ravel(pixel_circle)
     npixel_circle = len(pixel_circle)
 
-    avg_bckd = np.sum(data_ring)/npixel_ring
+    avg_bckd = np.median(data_ring)
     
     flux = raw_flux - npixel_circle*avg_bckd
     
@@ -179,6 +179,7 @@ def do_photometry(n_cluster, files, path, threshold,plot):
     redshift     = []
     MSZ          = []
     rcrit        = []
+    rp           = []
 
     for line in filenames :
         inout.progress(k, n_cluster, 'Cluster')
@@ -212,8 +213,8 @@ def do_photometry(n_cluster, files, path, threshold,plot):
 
         #print centre_source
 	profile,rc = radial_profile(data,centre_source,threshold,0)
-        r_in = 3*rc
-        r_out = 3*rc + 5
+        r_in = 3. * rc
+        r_out = 3. * rc + 5
 	data_circle,data_ring = phot_mask(data,rc,r_in,r_out,0)
        
 
@@ -236,14 +237,18 @@ def do_photometry(n_cluster, files, path, threshold,plot):
 	data_circle,data_ring = phot_mask(data,rc,r_in,r_out,0)
        
         
-        if rc <= r_in :#and r_out < (ma.sqrt(2)*n1)/6. : #FIXME 
+        if rc <= r_in and flux > 0. : 
+        #and r_out < (ma.sqrt(2)*n1)/6. : #FIXME
             flux.append(get_flux(data_circle,data_ring))
             redshift.append(rd[0])
             MSZ.append(masse[0])
             rcrit.append(rc)
-
+            if k ==0 : 
+                rp = profile[:150]
+            else :
+                rp = np.vstack((rp, profile[:150]))
         k += 1
-    return flux, redshift, MSZ, rcrit
+    return flux, redshift, MSZ, rcrit, rp
     
 
 

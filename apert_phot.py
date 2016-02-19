@@ -15,7 +15,7 @@ path  = "patch_SZ/SZ/"
 
 threshold = 0.4
 
-flux, redshift, MSZ, rcrit = ap.do_photometry(
+flux, redshift, MSZ, rcrit, rp = ap.do_photometry(
     n_cluster, files, path, threshold,0
 )
 
@@ -23,6 +23,7 @@ slct_redshift = []
 slct_flux     = []
 slct_msz      = []
 slct_rcrit    = []
+slct_rp       = []
 
 l = 0
 for i in range(len(redshift)):
@@ -31,9 +32,25 @@ for i in range(len(redshift)):
         slct_flux.append(flux[i])
         slct_msz.append(MSZ[i])
         slct_rcrit.append(rcrit[i])
+        slct_rp.append(rp[i])
         l +=1
 n_cl = l
-#FIXME look mass/redshift unknow ident?
+k = 0
+
+ar_rc = np.asarray(slct_rcrit)
+for k in range(np.max(slct_rcrit)) :
+    index = np.where(ar_rc == k)
+    print index
+    for j in range(len(index)) : 
+        if j == 0 : 
+            r_moy[k] =  
+        else :
+            r_moy[k] = np.vstack(())
+    
+profil_tot = np.median(slct_rp, axis=0)
+
+plt.plot(profil_tot)
+plt.show()
 
 moy   = np.mean(slct_flux)
 std   = np.std(slct_flux)
