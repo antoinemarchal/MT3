@@ -13,12 +13,10 @@ n_cluster = 1383 #Number of cluster selected
 files = "patch_SZ/SZ/filenames.txt"
 path  = "patch_SZ/SZ/"
 
-r_in      = 105 #FIXME between rc and shape image
-r_out     = 110
 threshold = 0.4
 
 flux, redshift, MSZ, rcrit = ap.do_photometry(
-    n_cluster, files, path, r_in, r_out, threshold
+    n_cluster, files, path, threshold
 )
 
 slct_redshift = []
@@ -115,7 +113,6 @@ with open('results/RD_out_msz.pkl', 'wb') as output:
     mon_pickler = pickle.Pickler(output)
     mon_pickler.dump(RD_out_msz)
 output.close()
-
 
 with open('results/slct_rcrit.pkl', 'wb') as output:
     mon_pickler = pickle.Pickler(output)

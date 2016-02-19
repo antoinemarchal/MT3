@@ -122,8 +122,8 @@ def radial_profile(data, center, threshold ,plot):
     
     #Normalisation
 	#la normalisation me parait bidon
-    radialprofile = (radialprofile - np.min(radialprofile)) \
-                    / (np.max(radialprofile) - np.min(radialprofile))
+    radialprofile = (radialprofile - np.median(data)) \
+                    / (np.max(radialprofile) - np.median(data))
                            
     #### Calcul d'un rayon caracteristique rc :
     #### 60 % du flux en partant du centre
@@ -176,7 +176,7 @@ def get_flux(data_circle,data_ring):
     return flux
 #######################################################
 
-def do_photometry(n_cluster, files, path, r_in, r_out, threshold):
+def do_photometry(n_cluster, files, path, threshold):
     filenames =  open (files)
     k = 0
     flux         = []
@@ -195,18 +195,19 @@ def do_photometry(n_cluster, files, path, r_in, r_out, threshold):
     	n1,n2      = data.shape
 	centre     = (n1/2,n2/2)
 	profile,rc = radial_profile(data,centre,threshold,0)
-       
+        r_in       = 3 * rc
+        r_out      = 3 * rc + 5.
 	##FIXME
 	##modifier les valeur de rayon pour les anneaux
 	### !!!! ne jamais metre 1 en dernier argument####
-	data_circle,data_ring = phot_mask(data,rc,r_in,r_out,1)
+	data_circle,data_ring = phot_mask(data,rc,r_in,r_out,0)
         pouet = get_flux(data_circle,data_ring)
         #if pouet >= 0.03 :
         #plt.figure()
         #plt.imshow(data)
         #plt.show()
         
-        if rc <= r_in : 
+        if rc <= r_in :#and r_out < (ma.sqrt(2)*n1)/6. : #FIXME 
             flux.append(get_flux(data_circle,data_ring))
             redshift.append(rd[0])
             MSZ.append(masse[0])
