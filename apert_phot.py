@@ -9,55 +9,63 @@ import astropy.table as pytabs
 import mod_ap as ap
 import pickle
 
-n_cluster = 1321
+n_cluster = 1383 #Number of cluster selected
 files = "patch_SZ/SZ/filenames.txt"
 path  = "patch_SZ/SZ/"
 
-r_in      = 35 #FIXME between rc and shape image
-r_out     = 45
+r_in      = 105 #FIXME between rc and shape image
+r_out     = 110
 threshold = 0.4
 
-flux, redshift, MSZ = ap.do_photometry(
+flux, redshift, MSZ, rcrit = ap.do_photometry(
     n_cluster, files, path, r_in, r_out, threshold
 )
 
-sort_redshift = []
-sort_flux     = []
-sort_msz      = []
+slct_redshift = []
+slct_flux     = []
+slct_msz      = []
+slct_rcrit    = []
 
 l = 0
 for i in range(len(redshift)):
     if redshift[i] >= 0. and MSZ[i] != 0. :
-        sort_redshift.append(redshift[i])
-        sort_flux.append(flux[i])
-        sort_msz.append(MSZ[i])
+        slct_redshift.append(redshift[i])
+        slct_flux.append(flux[i])
+        slct_msz.append(MSZ[i])
+        slct_rcrit.append(rcrit[i])
         l +=1
 n_cl = l
 #FIXME look mass/redshift unknow ident?
 
-moy   = np.mean(sort_flux)
-std   = np.std(sort_flux)
+moy   = np.mean(slct_flux)
+std   = np.std(slct_flux)
 
+#Relative Devaiation (RD)/ Sort 2 sigma
+#in < 2sigma -- out > 2sigma
 RD_in_redshift  = []
 RD_out_redshift = []
 RD_in_flux      = []
 RD_out_flux     = []
 RD_in_msz       = []
 RD_out_msz      = []
+RD_in_rcrit     = []
+RD_out_rcrit    = []
 
 j = 0
 l = 0
 for i in range(n_cl):
-    RD = np.absolute((sort_flux[i]-moy) / std)
+    RD = np.absolute((slct_flux[i]-moy) / std)
     if RD > 2.:
-        RD_out_redshift.append(sort_redshift[i])
-        RD_out_flux.append(sort_flux[i])
-        RD_out_msz.append(sort_msz[i])
+        RD_out_redshift.append(slct_redshift[i])
+        RD_out_flux.append(slct_flux[i])
+        RD_out_msz.append(slct_msz[i])
+        RD_out_rcrit.append(rcrit[i])
         j += 1
     else:
-        RD_in_redshift.append(sort_redshift[i])
-        RD_in_flux.append(sort_flux[i])
-        RD_in_msz.append(sort_msz[i])
+        RD_in_redshift.append(slct_redshift[i])
+        RD_in_flux.append(slct_flux[i])
+        RD_in_msz.append(slct_msz[i])
+        RD_in_rcrit.append(rcrit[i])
         l += 1
 
 n_in  = l
@@ -69,17 +77,17 @@ print str(n_out) + 'Cluster excluded'
 """---------------------------------------------------
 ---Save results
 ---------------------------------------------------"""
-with open('results/sort_redshift.pkl', 'wb') as output:
+with open('results/slct_redshift.pkl', 'wb') as output:
     mon_pickler = pickle.Pickler(output)
-    mon_pickler.dump(sort_redshift)
+    mon_pickler.dump(slct_redshift)
 output.close()
-with open('results/sort_flux.pkl', 'wb') as output:
+with open('results/slct_flux.pkl', 'wb') as output:
     mon_pickler = pickle.Pickler(output)
-    mon_pickler.dump(sort_flux)
+    mon_pickler.dump(slct_flux)
 output.close()
-with open('results/sort_msz.pkl', 'wb') as output:
+with open('results/slct_msz.pkl', 'wb') as output:
     mon_pickler = pickle.Pickler(output)
-    mon_pickler.dump(sort_msz)
+    mon_pickler.dump(slct_msz)
 output.close()
 
 with open('results/RD_in_redshift.pkl', 'wb') as output:
@@ -106,6 +114,22 @@ output.close()
 with open('results/RD_out_msz.pkl', 'wb') as output:
     mon_pickler = pickle.Pickler(output)
     mon_pickler.dump(RD_out_msz)
+output.close()
+
+
+with open('results/slct_rcrit.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(slct_rcrit)
+output.close()
+
+with open('results/RD_in_rcrit.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(RD_in_rcrit)
+output.close()
+
+with open('results/RD_out_rcrit.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(RD_out_rcrit)
 output.close()
 
 ##################################################################################################

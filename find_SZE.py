@@ -26,7 +26,7 @@ if args.n_cluster > 1653:
 
 n_obs          = 6               #Number of HFI maps Planck
 n_cluster      = args.n_cluster  #Number of cluster in catalog
-patch_size     = 100
+patch_size     = 250
 
 PSZ = "PSZ2v1.fits"
 NAME,GLON,GLAT, REDSHIFT, MSZ = inout.coord_SZ(PSZ)

@@ -179,9 +179,11 @@ def get_flux(data_circle,data_ring):
 def do_photometry(n_cluster, files, path, r_in, r_out, threshold):
     filenames =  open (files)
     k = 0
-    flux      = []
-    redshift  = []
-    MSZ       = []
+    flux         = []
+    redshift     = []
+    MSZ          = []
+    rcrit        = []
+
     for line in filenames :
         inout.progress(k, n_cluster, 'Cluster')
 	patch      = path + line.strip()
@@ -197,17 +199,18 @@ def do_photometry(n_cluster, files, path, r_in, r_out, threshold):
 	##FIXME
 	##modifier les valeur de rayon pour les anneaux
 	### !!!! ne jamais metre 1 en dernier argument####
-	data_circle,data_ring = phot_mask(data,rc,r_in,r_out,0)
+	data_circle,data_ring = phot_mask(data,rc,r_in,r_out,1)
         pouet = get_flux(data_circle,data_ring)
         #if pouet >= 0.03 :
         #plt.figure()
         #plt.imshow(data)
         #plt.show()
         
-        if rc <=  r_in : 
+        if rc <= r_in : 
             flux.append(get_flux(data_circle,data_ring))
             redshift.append(rd[0])
             MSZ.append(masse[0])
+            rcrit.append(rc)
         k += 1
-    return flux, redshift, MSZ
+    return flux, redshift, MSZ, rcrit
     
