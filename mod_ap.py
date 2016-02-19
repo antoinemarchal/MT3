@@ -108,9 +108,12 @@ def radial_profile(data, center, threshold ,plot):
     radialprofile = tbin / nr
     
     #Normalisation
+
     med = np.median(data)
     radialprofile = (radialprofile - med) \
                     / (np.max(radialprofile) - med)
+
+
                            
     #### Calcul d'un rayon caracteristique rc :
     #### 60 % du flux en partant du centre
@@ -166,12 +169,17 @@ def get_flux(data_circle,data_ring):
     return flux
 #######################################################
 
-def do_photometry(n_cluster, files, path, r_in, r_out, threshold,plot):
+
+def do_photometry(n_cluster, files, path, threshold,plot):
+
+
     filenames =  open (files)
     k = 0
-    flux      = []
-    redshift  = []
-    MSZ       = []
+    flux         = []
+    redshift     = []
+    MSZ          = []
+    rcrit        = []
+
     for line in filenames :
         inout.progress(k, n_cluster, 'Cluster')
 	patch      = path + line.strip()
@@ -182,6 +190,7 @@ def do_photometry(n_cluster, files, path, r_in, r_out, threshold,plot):
         masse      = hdr['MSZ']
     	n1,n2      = data.shape
 	centre     = (n1/2,n2/2)
+
         
         # centre de la source  = max(source)
         # in case there's a secondary source on the patch
@@ -203,7 +212,8 @@ def do_photometry(n_cluster, files, path, r_in, r_out, threshold,plot):
 
         #print centre_source
 	profile,rc = radial_profile(data,centre_source,threshold,0)
-        
+        r_in = 3*rc
+        r_out = 3*rc + 5
 	data_circle,data_ring = phot_mask(data,rc,r_in,r_out,0)
        
 
@@ -218,12 +228,22 @@ def do_photometry(n_cluster, files, path, r_in, r_out, threshold,plot):
             plt.xlabel('Radius [pix]')
             plt.ylabel('Flux')
             plt.show()
-       # if rc <=  r_in : 
-       #     flux.append(get_flux(data_circle,data_ring))
-       #     redshift.append(rd[0])
-       #     MSZ.append(masse[0])
+     
+       
+	## FIXME
+	## modifier les valeur de rayon pour les anneaux
+	## !!!! ne jamais metre 1 en dernier argument####
+	data_circle,data_ring = phot_mask(data,rc,r_in,r_out,0)
+       
+        
+        if rc <= r_in :#and r_out < (ma.sqrt(2)*n1)/6. : #FIXME 
+            flux.append(get_flux(data_circle,data_ring))
+            redshift.append(rd[0])
+            MSZ.append(masse[0])
+            rcrit.append(rc)
+
         k += 1
-    return flux, redshift, MSZ
+    return flux, redshift, MSZ, rcrit
     
 
 
