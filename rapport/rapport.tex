@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt,fleqn]{article}
+\documentclass[a4paper,11pt]{article}
 \usepackage[top=2.5cm,bottom=3cm,right=3cm,left=3cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -13,6 +13,7 @@
 \usepackage{listings}
 \usepackage{blindtext}
 \usepackage{titling}
+\usepackage{multicol}
 
 \usepackage[english, status=draft]{fixme}
 \fxusetheme{color}
@@ -73,43 +74,104 @@ Etude à travers l'effet \\ Sunyaev-Zel’dovich}} \\[2cm]}
 \newpage
 
 \section{L'effet Sunyaev-Zel’dovich}
-L'effet Sunyaev-Zel’dovich est provoqué par la diffusion Compton
+
+\begin{figure}[b!]
+  \centering
+  \includegraphics[width=4.5in]{sz_effect.eps}
+  \label{sz_effect}
+  \caption{}
+\end{figure}
+
+L'effet Sunyaev-Zel’dovich \cite{Sunyaev} est provoqué par la diffusion Compton
 Inverse des photons du CMB par le gaz d'électrons chaud ($k_B T_e
 \lesssim 15$ KeV) présent dans les amas de galaxies. Son application à
 la cosmologie est capitale puisqu'il est de part sa nature
 théoriquement indépendant du redshift. Il permet donc l'étude de la
 distribution des amas qui est un enjeux important dans la
 compréhension du modèle standard de la cosmologie et notamment de la
-formation des grandes structures.  
+formation des grandes structures. Son équation est donnée par : 
+
+\begin{align*}
+  \frac{\Delta T_{SZE}}{T_{CMB}} = f(\nu) \times  y
+\end{align*}
+
+\begin{multicols}{2}\noindent
+\begin{align*}
+  y = \int_{l.o.s} \frac{kT_e}{m_e c^2} n_e \sigma_T dl 
+\end{align*}
+\begin{align*}
+  f(\nu) = \frac{h \nu}{k T_{CMB}} \frac{\e^{x(\nu) + 1}}{\e^{x(\nu)
+  -1}} - 4
+\end{align*}
+\end{multicols}
+
+où $k$ is est la constante Boltzmann, $m_e$ la masse des electrons, $c$
+la vitesse de la lumière, $\sigma_T$ la section efficace de Thomson, 
+$n_e$ la densité d'electrons et $T_e$ la température des electrons.
 
 \section{Application de la méthode ILC}
-\begin{equation}
+
+\begin{figure}[b!]
+  \centering
+  \includegraphics[width=6in]{w_lat.pdf}
+  \label{w_lat}
+  \caption{}
+\end{figure}
+
+\begin{figure}[b!]
+  \centering
+  \includegraphics[width=5in]{w_full.pdf}
+  \label{w_full}
+  \caption{}
+\end{figure}
+
+L'ILC utilisé ici est basé sur l'article de Remazeilles M. \&
+al. \cite{Remazeilles}. Cette méthode nous permet d'obtenir  une
+estimation indépendante du CMB et de l'effet SZ. L'estimateur
+permettant la variance minimum est donné par la combinaison linéaire: 
+
+\begin{align*}
+  \widehat{\textbf{s}} = \textbf{w}^t \textbf{x}
+\end{align*}
+
+\begin{align*}
   \textbf{w}^t = \frac{\left( \textbf{b}^t\widehat{R}^{-1} \textbf{b}
     \right) \textbf{a}^t \widehat{R}^{-1} - \left( \textbf{a}^t\widehat{R}^{-1} \textbf{b}
     \right) \textbf{b}^t \widehat{R}^{-1}}{\left( \textbf{a}^t\widehat{R}^{-1} \textbf{a}
     \right) \left( \textbf{b}^t\widehat{R}^{-1} \textbf{b}
     \right) - \left( \textbf{a}^t\widehat{R}^{-1} \textbf{b}
     \right)^2}
-\end{equation}
+\end{align*}
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=5in]{sz_effect.png}
-  \caption{fixme}
-\end{figure}
-\fxwarning{dimension image sortie python}
+où $\widehat{R}$ est la matrice de covariance empirique des cartes
+observationnelles, $a = (1, 1, ..., 1)^t$ et b est le vecteur de
+l'effet SZ thermique donné par $f(\nu)$. A partir des coordonnées
+galactiques des amas de PSZ2 nous appliquons une ILC sur chaque amas
+contenu dans un patch de dimensions FIXME \fxwarning{dimension physique
+  patch} extrait au préalable de la sphère celeste de Planck par
+projection tangentielle. 
+Un des résultats de l'ILC est représenté Figure \ref{sz_effect}.
+Ce qui va nous interesser par la suite est l'étude du comportement des
+poids appliqués à chaque fréquence. Nous allons en particulier
+comparer le résultats moyennés sur l'ensemble des patchs avec celui de
+l'ensemble du ciel.  
+
+  
 
 
 \section{Photémétrie d'ouverture}
-
 \section{Résultats et discussion}
 
-
 \begin{thebibliography}{2}
-\addcontentsline{toc}{chapter}{Bibliographie}
-   Remazeilles M. \& al., CMB and SZ effect
-   separation with Constrained Internal Linear Combinations, 
-   Mon. Not. R. Astron. Soc. 410, 2481–2487 (2011) 
+  \addcontentsline{toc}{chapter}{Bibliographie} 
+
+\bibitem{Sunyaev} Sunyaev, R. A., \& Zeldovich, Y. B. 1972, Comments on
+  Astrophysics and Space Physics, 4, 173 \\
+  
+\bibitem{Remazeilles}Remazeilles M. \& al., CMB and SZ effect
+  separation with Constrained Internal Linear Combinations, 
+  Mon. Not. R. Astron. Soc. 410, 2481–2487 (2011)  \\
+  
 \end{thebibliography}
 \listoffixmes
 \end{document}
