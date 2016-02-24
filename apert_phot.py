@@ -1,3 +1,4 @@
+
 import sys
 import astropy.io.fits as pyfits
 import matplotlib.pyplot as plt
@@ -10,6 +11,7 @@ import mod_ap as ap
 import pickle
 
 n_cluster = 1383 #Number of cluster selected
+files = "patch_SZ/SZ/reduced_filenames.txt"
 files = "patch_SZ/SZ/filenames.txt"
 path  = "patch_SZ/SZ/"
 
@@ -39,19 +41,21 @@ k = 0
 
 ar_rc = np.asarray(slct_rcrit)
 rp = np.asarray(slct_rp)
-rc = 0 
+rc = 0
+nb_indexes = [0]
+## determination du profil type en fonction du rayon critique 
 for k in range(np.max(slct_rcrit)) :
     indexes = np.where(ar_rc == k)
     indexes = np.asarray(indexes)
     n1,n2 = indexes.shape
-    print n1,n2
-
+    nb_indexes = np.append(nb_indexes,n2) 
+   
     #retirer la premiere ligne a la sortie du bloc 
     if k == 0 :
         med_profile = np.zeros([1,150])
     
     if n2 == 0 :
-        print 'OOOOO'
+
         med_profile_temp = np.zeros([1,150]) 
         med_profile = np.vstack((med_profile,med_profile_temp))
         rc = rc + 1
@@ -68,23 +72,27 @@ for k in range(np.max(slct_rcrit)) :
         else:
             test_1d = 0
             matrix_rc = np.vstack((matrix_rc,rp_rc[j,:]))
-            
-    print matrix_rc.shape
 
     if test_1d == 1 :
         med_profile_temp = matrix_rc
     else : 
         med_profile_temp = np.median(matrix_rc, axis = 0)
         
-    print med_profile_temp.shape,med_profile.shape, 'KK = ',k
  
     med_profile = np.vstack((med_profile,med_profile_temp))
 
  ##  retire la premiere ligne de 0 de l'initialisation
-med_profile = med_profile[1:,:]
+# en fait non, si on veut garder la correspondace i = rc 
+# et non pas i = rc -1
+
+# med_profile = med_profile[1:,:]
+
+print nb_indexes
 
 for i in range(20):
-    plt.plot(med_profile[i,:])
+	if nb_indexes[i] >= 10  : 
+   		plt.plot(med_profile[i,:])
+plt.plot([0,150],[0.4,0.4])
 plt.show()
 
 moy   = np.mean(slct_flux)
