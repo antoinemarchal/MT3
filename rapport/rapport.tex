@@ -109,19 +109,16 @@ où $k$ is est la constante Boltzmann, $m_e$ la masse des electrons, $c$
 la vitesse de la lumière, $\sigma_T$ la section efficace de Thomson, 
 $n_e$ la densité d'electrons et $T_e$ la température des electrons.
 
+Deux composantes sont à distinguer, l'effet SZ thermique et
+l'effet SZ cinétique. La deuxième composante est simplement dù à un effet
+Doppler additionnel. 
+
 \section{Application de la méthode ILC}
 
 \begin{figure}[b!]
   \centering
   \includegraphics[width=6in]{w_lat.pdf}
   \label{w_lat}
-  \caption{}
-\end{figure}
-
-\begin{figure}[b!]
-  \centering
-  \includegraphics[width=5in]{w_full.pdf}
-  \label{w_full}
   \caption{}
 \end{figure}
 
@@ -134,14 +131,15 @@ permettant la variance minimum est donné par la combinaison linéaire:
   \widehat{\textbf{s}} = \textbf{w}^t \textbf{x}
 \end{align*}
 
-\begin{align*}
+\begin{align}
+  \label{eq::w}
   \textbf{w}^t = \frac{\left( \textbf{b}^t\widehat{R}^{-1} \textbf{b}
     \right) \textbf{a}^t \widehat{R}^{-1} - \left( \textbf{a}^t\widehat{R}^{-1} \textbf{b}
     \right) \textbf{b}^t \widehat{R}^{-1}}{\left( \textbf{a}^t\widehat{R}^{-1} \textbf{a}
     \right) \left( \textbf{b}^t\widehat{R}^{-1} \textbf{b}
     \right) - \left( \textbf{a}^t\widehat{R}^{-1} \textbf{b}
     \right)^2}
-\end{align*}
+\end{align}
 
 où $\widehat{R}$ est la matrice de covariance empirique des cartes
 observationnelles, $a = (1, 1, ..., 1)^t$ et b est le vecteur de
@@ -150,14 +148,40 @@ galactiques des amas de PSZ2 nous appliquons une ILC sur chaque amas
 contenu dans un patch de dimensions FIXME \fxwarning{dimension physique
   patch} extrait au préalable de la sphère celeste de Planck par
 projection tangentielle. 
-Un des résultats de l'ILC est représenté Figure \ref{sz_effect}.
+Un des résultats de l'ILC est représenté Figure \ref{sz_effect}. La
+map en température de l'effet SZ thermique est représentée sur lea
+partie gauche et le CMB sur la partie droite. Il est intéressant de
+constater qu'actuellement l'effet SZ cinétique est indiscernable du
+CMB par cette méthode.  
 Ce qui va nous interesser par la suite est l'étude du comportement des
-poids appliqués à chaque fréquence. Nous allons en particulier
+poids appliqués à chaque fréquence. En effet le calcul présenté
+équation \eqref{eq::w} est fonction de la matrice de corélation $R$ entre
+les six cartes de fréquences. Cependant, $R$ peut être plus ou moins affecté par
+différents effets (citués à des fréquences voisines de celles de l'effet SZ et
+du CMB) présent en avant plan : le rayonnement synchrotron et le
+rayonnement de freinage, la galaxie et les poussières, ou encore le bruit du
+détecteur.  \\
+
+La figure \ref{w_full} nous montre, pour chaque fréquence, le poids
+des amas du catalogue en fontion de la latitude donnée en coordonnées
+galactiques. On distingue bien une corélation entre ces deux
+variables. Ce sont dans les deux fréqences les plus haute que le
+perturbation est la plus grande (ie. la galaxie y est le plus
+présente). 
+
+\begin{figure}[b!]
+  \label{w_full}
+  \centering
+  \includegraphics[width=5in]{w_full.pdf}
+  \label{w_full}
+  \caption{}
+\end{figure}
+
+
+\fxwarning{tri des amas + dernier plot}
+Nous allons en particulier
 comparer le résultats moyennés sur l'ensemble des patchs avec celui de
-l'ensemble du ciel.  
-
-  
-
+l'ensemble du ciel.   
 
 \section{Photémétrie d'ouverture}
 \section{Résultats et discussion}
