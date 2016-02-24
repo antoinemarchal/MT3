@@ -166,7 +166,7 @@ if args.plot:
     #Plot of weight histogram and GLAT correlation
     #Plot of comparison with average weight of other group
     inout.plot_w_hist(
-        GLAT_slct, st_w, n_slct, 'ggplot'
+        GLAT_slct, st_w, n_slct, 'bmh'
     )
     inout.plot_w_glat(
         GLAT_slct, GLAT_excl, st_w, st_w_excl,
