@@ -87,13 +87,13 @@ for k in range(np.max(slct_rcrit)) :
 
 # med_profile = med_profile[1:,:]
 
-print nb_indexes
+#print nb_indexes
 
-for i in range(20):
-	if nb_indexes[i] >= 10  : 
-   		plt.plot(med_profile[i,:])
-plt.plot([0,150],[0.4,0.4])
-plt.show()
+#for i in range(20):
+#	if nb_indexes[i] >= 10  : 
+#   		plt.plot(med_profile[i,:])
+#plt.plot([0,150],[0.4,0.4])
+#plt.show()
 
 
 """---------------------------------------------------
@@ -114,6 +114,14 @@ output.close()
 with open('results/slct_rcrit.pkl', 'wb') as output:
     mon_pickler = pickle.Pickler(output)
     mon_pickler.dump(slct_rcrit)
+output.close()
+with open('results/med_profile.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(med_profile)
+output.close()
+with open('results/nb_indexes.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(nb_indexes)
 output.close()
 
 ##################################################################################################
