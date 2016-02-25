@@ -37,6 +37,7 @@ for i in range(len(redshift)):
         slct_rp.append(rp[i])
         l +=1
 n_cl = l
+print n_cl
 k = 0
 
 ar_rc = np.asarray(slct_rcrit)
@@ -99,6 +100,11 @@ for k in range(np.max(slct_rcrit)) :
 """---------------------------------------------------
 ---Save results
 ---------------------------------------------------"""
+with open('results/flux.pkl', 'wb') as output:
+    mon_pickler = pickle.Pickler(output)
+    mon_pickler.dump(flux)
+output.close()
+
 with open('results/slct_redshift.pkl', 'wb') as output:
     mon_pickler = pickle.Pickler(output)
     mon_pickler.dump(slct_redshift)
