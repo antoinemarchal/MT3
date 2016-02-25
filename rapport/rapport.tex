@@ -79,7 +79,9 @@ Etude à travers l'effet \\ Sunyaev-Zel’dovich}} \\[2cm]}
   \centering
   \includegraphics[width=4.5in]{sz_effect.eps}
   \label{sz_effect}
-  \caption{}
+  \caption{Séparation par méthode ILC de la composante TSZ (gauche) et de la
+    composante CMB+KSZ (droite) pour l'amas G006.76+30.45 du catalogue
+  PSZ2}
 \end{figure}
 
 L'effet Sunyaev-Zel’dovich \cite{Sunyaev} est provoqué par la diffusion Compton
@@ -109,17 +111,20 @@ où $k$ is est la constante Boltzmann, $m_e$ la masse des electrons, $c$
 la vitesse de la lumière, $\sigma_T$ la section efficace de Thomson, 
 $n_e$ la densité d'electrons et $T_e$ la température des electrons.
 
-Deux composantes sont à distinguer, l'effet SZ thermique et
-l'effet SZ cinétique. La deuxième composante est simplement dù à un effet
+Deux composantes sont à distinguer, l'effet SZ thermique (TSZ) et
+l'effet SZ cinétique (KSZ). La deuxième composante est simplement dù à un effet
 Doppler additionnel. 
 
 \section{Application de la méthode ILC}
 
 \begin{figure}[b!]
   \centering
-  \includegraphics[width=6in]{w_lat.pdf}
   \label{w_lat}
-  \caption{}
+  \includegraphics[width=6in]{w_lat.pdf}
+  \caption{Etude des poids appliqués à chacune des six fréquences en
+    fonction de la latitude en coordonnée galactique pour
+  l'ensemble de 1653 amas du catalogue. En jaune sont représenté les
+  amas exclus qui s'écarte de plus d'un $\sigma$ de la valeur moyenne.}
 \end{figure}
 
 L'ILC utilisé ici est basé sur l'article de Remazeilles M. \&
@@ -162,26 +167,37 @@ du CMB) présent en avant plan : le rayonnement synchrotron et le
 rayonnement de freinage, la galaxie et les poussières, ou encore le bruit du
 détecteur.  \\
 
-La figure \ref{w_full} nous montre, pour chaque fréquence, le poids
+La Figure \ref{w_lat} nous montre, pour chaque fréquence, le poids
 des amas du catalogue en fontion de la latitude donnée en coordonnées
 galactiques. On distingue bien une corélation entre ces deux
 variables. Ce sont dans les deux fréqences les plus haute que le
 perturbation est la plus grande (ie. la galaxie y est le plus
-présente). 
+présente). Pour continuer notre analyse et effectuer de la photométrie
+d'ouverture sur les amas, nous avons décider d'exclure les amas dont
+le poids s'écarte de plus d'un $\sigma$ de la valeur moyenne, où
+$\sigma$ représente la déviation standard sur l'ensemble 1653 amas. \\
 
-\begin{figure}[b!]
-  \label{w_full}
+Nous pouvons voir sur la Figure \ref{w_full} les poids moyenné sur
+l'ensemble des amas du catalogue (bleu ciel) et sur l'ensemble des
+amas selectionné (bleu foncé) en fonction de la fréquence. De plus
+nous représentons les mêmes grandeurs calculer pour chacune des maps
+complète de Planck. On observe un bon accord pour les 4 fréquences les
+plus hautes et un désaccord pour les deux les plus basses. A basse
+fréquence l'émission synchrotron de la galaxie peut en effet induire
+ce décalage. Il n'est pas présent sur les amas du catalogue car
+beaucoup moins nombreux dans le plan de la galaxie du simplement à un
+effet observationel. 
+
+\begin{figure}[h!]
   \centering
-  \includegraphics[width=5in]{w_full.pdf}
   \label{w_full}
-  \caption{}
+  \includegraphics[width=6in]{w_full.pdf}
+  \caption{Poids moyen de l'ensemble des amas du catalogue (bleu ciel) et sur
+    l'ensemble des amas selectionnés (bleu foncé) en fonction
+    de la fréquence. En violet sont réprésenté ces grandeurs pour
+    l'ensemble des maps Planck.}
 \end{figure}
-
-
-\fxwarning{tri des amas + dernier plot}
-Nous allons en particulier
-comparer le résultats moyennés sur l'ensemble des patchs avec celui de
-l'ensemble du ciel.   
+  
 
 \section{Photémétrie d'ouverture}
 \section{Résultats et discussion}
