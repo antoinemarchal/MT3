@@ -108,7 +108,11 @@ def radial_profile(data, center, threshold ,plot):
     radialprofile = tbin / nr
     
     #Normalisation
-    med = np.median(data)
+    mdata = np.copy(data)
+    mask_circle = sector_mask(mdata.shape,(x,y),30,(0,360))
+    mdata[~mask_circle] = 0
+    med = np.median(mdata[np.where(mdata != 0)])
+    
     radialprofile = (radialprofile - med) \
                     / (np.max(radialprofile) - med)
                      
