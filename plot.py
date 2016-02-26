@@ -2,7 +2,17 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import *
 from matplotlib.font_manager import FontProperties
 import numpy as np
+from numpy import sqrt, log
+import math as ma
 import pickle
+import plot 
+
+def Gamma2sigma(Gamma):
+    '''Function to convert FWHM (Gamma) to standard deviation (sigma)'''
+    return Gamma / ( sqrt(log(256)))
+
+def gaussian(x, mu, sig):
+    return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
 flux            = pickle.load(open("results/flux.pkl","rb"))
 slct_redshift   = pickle.load(open("results/slct_redshift.pkl","rb"))
@@ -84,14 +94,22 @@ plt.savefig('results/rslt_2.pdf', format='pdf')
 
 fig_3   = plt.figure(figsize=(10,6))
 ax_3    = fig_3.add_subplot(1, 1, 1)
+ax_3.set_xlim(0, 35)
+height = 1
+mean = 0
+sigma = Gamma2sigma(11.2466)
+x = np.linspace(0,40,100)
+gauss = gaussian(x, 0., sigma)
+plt.plot(x,gauss, 'k--', label='PSF')
 for i in range(20):
     if nb_indexes[i] >= 10 :
    	plt.plot(med_profile[i,:], label="$R_{c} = $"+str(i))
 plt.plot([0,150],[0.4,0.4])
-plt.xlabel('$R [pix]$')
-plt.ylabel('$Normalized Flux$')
+plt.xlabel('$R$ $[pix]$')
+plt.ylabel('$Normalized$ $Flux$')
 plt.legend(loc=1, numpoints=1)
 leg = plt.gca().get_legend()
 ltext  = leg.get_texts()
-plt.setp(ltext, fontsize='small') 
+plt.setp(ltext, fontsize='small')
+plt.savefig('results/radius.pdf', format='pdf')
 plt.show()
