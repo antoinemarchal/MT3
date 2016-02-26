@@ -69,8 +69,10 @@ Etude à travers l'effet \\ Sunyaev-Zel’dovich}} \\[2cm]}
 \end{abstract}
 \end{titlingpage}
 %\tableofcontents
-%\thispagestyle{empty}
+\thispagestyle{empty}
+
 \newpage
+
 \section{L'effet Sunyaev-Zel’dovich}
 
 \begin{figure}[b!]
@@ -189,7 +191,7 @@ effet observationel.
 \begin{figure}[h!]
   \centering
   \label{w_full}
-  \includegraphics[width=4.6in]{w_full.pdf}
+  \includegraphics[width=6in]{w_full.pdf}
   \caption{Poids moyen de l'ensemble des amas du catalogue (bleu ciel) et sur
     l'ensemble des amas selectionnés (bleu foncé) en fonction
     de la fréquence. En violet sont réprésenté ces grandeurs pour
@@ -198,17 +200,45 @@ effet observationel.
   
 
 \section{Photémétrie d'ouverture}
-\section{Résultats et discussion}
+La photometrie d'ouverture est un traitement assez basique qui va nous 
+permettre de comparer les flux de nos sources entre eux.
+Pour cette procédure nous avons du définir deux objets : un cercle autour de la source SZ
+sur lequel le flux sera calculé et un anneau autour de ce cercle qui va nous servir a estimer le bruit 
+aux alentours de la source.
+
+\paragraph{Le cercle.} Pour définir le rayon du cercle, nous avons utilisé une procédure qui nous donne le
+profile radiale de la source qui nous interesse. Ce profile radiale est tracé à partir de la valeur maximale trouvé
+sur l'ama que l'on vise. Une fois ce profile normalisé, il est possible de définir un rayon critique
+$r_c$ qui va nour permettre de prendre en compte pour chaque source la même proportion du flux totale
+(similaire à FWMH sur le principe). Conretement nous avons placé $r_c$ là où le profile radiale vaut 40\% du maximum
+(cf \ref{profile radial}). \\ 
+
+\paragraph{L'anneau} Pour des raisons de simplicité le rayon intérieur de l'anneau 
+est fixé à $r_{in} = 3r_c $. Si l'on prend un rayon trop grand on risque de prendre en compte dans cette
+anneau des amas qui seraient assz proche de notre source.  le rayon externe de l'anneau est fixé à 
+$r_{out} = r_{in} + 5  $ (en pixels)
 
 \begin{figure}[h!]
   \centering
-  \label{rslt_1}
-  \includegraphics[width=4in]{rslt_1.pdf}
-  \caption{}
+  \label{profile radial}
+  \includegraphics[scale = 0.5]{profile_radiale_ama.pdf}
+  \caption{Exemple de profile radiale normalisé tracé pour une source SZ. La Ligne pointillé rouge montre 
+  l'emplacement du rayon critique $rc$ .}
 \end{figure}
 
+\section{Résultats et discussion}
 
-\newpage
+
+\begin{figure}[h!]
+  \centering
+  \label{photometrie d'ouverture}
+  \includegraphics[scale = 0.8]{exemple_photometrie_d'ouverture.pdf}
+  \caption{Exemple de cercles et d'anneaux définis pour les procédures de photometrie d'ouverture sur une source SZ. 
+  L'anneau et le cercle centrale sont stockés indépendemment afin de rendre les calculs plus rapides.}
+\end{figure}
+
+\section{Résultats et discussion}
+
 \begin{thebibliography}{2}
   \addcontentsline{toc}{chapter}{Bibliographie} 
 
