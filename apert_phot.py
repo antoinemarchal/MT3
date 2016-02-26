@@ -43,8 +43,10 @@ ar_rc = np.asarray(slct_rcrit)
 rp = np.asarray(slct_rp)
 rc = 0
 nb_indexes = [0]
-## determination du profil type en fonction du rayon critique 
-for k in range(np.max(slct_rcrit)) :
+
+## determination du profil type en fonction du rayon critique
+
+for k in range(np.max(slct_rcrit)+1) :
     indexes = np.where(ar_rc == k)
     indexes = np.asarray(indexes)
     n1,n2 = indexes.shape
@@ -80,20 +82,19 @@ for k in range(np.max(slct_rcrit)) :
         
  
     med_profile = np.vstack((med_profile,med_profile_temp))
+    
+# med_profile [i,:] designe le profile median  pour rc = i
+# med_profile [0,:] = 0
+# Si pas de rc a i , med_profile[i,:] = 0
 
- ##  retire la premiere ligne de 0 de l'initialisation
-# en fait non, si on veut garder la correspondace i = rc 
-# et non pas i = rc -1
-
-# med_profile = med_profile[1:,:]
 
 #print nb_indexes
-
-#for i in range(20):
-#	if nb_indexes[i] >= 10  : 
-#   		plt.plot(med_profile[i,:])
-#plt.plot([0,150],[0.4,0.4])
-#plt.show()
+if a = 1 : 
+    for i in range(20):
+	if nb_indexes[i] >= 10  : 
+   	    plt.plot(med_profile[i,:])
+    plt.plot([0,150],[0.4,0.4])
+    plt.show()
 
 
 """---------------------------------------------------
