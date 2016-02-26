@@ -35,6 +35,10 @@ for i in range(len(redshift)):
         slct_rcrit.append(rcrit[i])
         slct_rp.append(rp[i])
         l +=1
+        if rcrit[i] == 4 :
+            print rcrit[i]
+            plt.plot(rp[i])
+            plt.show()
 n_cl = l
 print n_cl
 k = 0
@@ -46,12 +50,11 @@ nb_indexes = [0]
 
 ## determination du profil type en fonction du rayon critique
 
-for k in range(np.max(slct_rcrit)+1) :
+for k in range(np.max(slct_rcrit)) :
     indexes = np.where(ar_rc == k)
     indexes = np.asarray(indexes)
     n1,n2 = indexes.shape
     nb_indexes = np.append(nb_indexes,n2) 
-   
     #retirer la premiere ligne a la sortie du bloc 
     if k == 0 :
         med_profile = np.zeros([1,150])
@@ -89,7 +92,8 @@ for k in range(np.max(slct_rcrit)+1) :
 
 
 #print nb_indexes
-if a = 1 : 
+a = 0.
+if a == 1 : 
     for i in range(20):
 	if nb_indexes[i] >= 10  : 
    	    plt.plot(med_profile[i,:])

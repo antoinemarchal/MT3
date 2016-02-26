@@ -8,7 +8,6 @@ import pickle
 import plot 
 
 def Gamma2sigma(Gamma):
-    '''Function to convert FWHM (Gamma) to standard deviation (sigma)'''
     return Gamma / ( sqrt(log(256)))
 
 def gaussian(x, mu, sig):
@@ -102,9 +101,10 @@ x = np.linspace(0,40,100)
 gauss = gaussian(x, 0., sigma)
 plt.plot(x,gauss, 'k--', label='PSF')
 for i in range(20):
-    if nb_indexes[i] >= 10 :
+    if nb_indexes[i] >= 2 :
    	plt.plot(med_profile[i,:], label="$R_{c} = $"+str(i))
 plt.plot([0,150],[0.4,0.4])
+plt.plot([0,150],[0.5,0.5])
 plt.xlabel('$R$ $[pix]$')
 plt.ylabel('$Normalized$ $Flux$')
 plt.legend(loc=1, numpoints=1)
@@ -112,4 +112,5 @@ leg = plt.gca().get_legend()
 ltext  = leg.get_texts()
 plt.setp(ltext, fontsize='small')
 plt.savefig('results/radius.pdf', format='pdf')
+
 plt.show()

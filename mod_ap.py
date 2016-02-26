@@ -108,13 +108,10 @@ def radial_profile(data, center, threshold ,plot):
     radialprofile = tbin / nr
     
     #Normalisation
-
     med = np.median(data)
     radialprofile = (radialprofile - med) \
                     / (np.max(radialprofile) - med)
-
-
-                           
+                     
     #### Calcul d'un rayon caracteristique rc :
     #### 60 % du flux en partant du centre
 	##valeur seuil a discuter...
@@ -130,6 +127,11 @@ def radial_profile(data, center, threshold ,plot):
             break
         else:
             rc = np.max(r_60)
+
+    #print rc
+    #radialprofile = radialprofile / rc
+    #radialprofile = (radialprofile - med) \
+    #                / (np.max(radialprofile) - med)
     
 
     if plot == 1 :
@@ -192,24 +194,24 @@ def do_photometry(n_cluster, files, path, threshold,plot):
     	n1,n2      = data.shape
 	centre     = (n1/2,n2/2)
 
-        
+        centre_source = centre
         # centre de la source  = max(source)
         # in case there's a secondary source on the patch
         # we define  a preliminary circle around the center
         
-        preliminary_circle = np.copy(data)
-        mask = sector_mask(data.shape,centre,15,(0,360))
+        #preliminary_circle = np.copy(data)
+        #mask = sector_mask(data.shape,centre,15,(0,360))
 
         # si on met 0 ca pose pb pour la detection du
         # max 
-        preliminary_circle[~mask]= -1
+        #preliminary_circle[~mask]= -1
             
-        max_source = np.where(data == np.max(preliminary_circle))
-        max_source = np.asarray(max_source)
+        #max_source = np.where(data == np.max(preliminary_circle))
+        #max_source = np.asarray(max_source)
         
-        x_centre = np.mean(max_source[:,0])
-        y_centre = np.mean(max_source[:,1])
-        centre_source = [x_centre,y_centre]
+        #x_centre = np.mean(max_source[:,0])
+        #y_centre = np.mean(max_source[:,1])
+        #centre_source = [x_centre,y_centre]
 
         #print centre_source
 	profile,rc = radial_profile(data,centre_source,threshold,0)

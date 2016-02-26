@@ -50,9 +50,9 @@ for line in unit_1 :
     )
     
     if "545" in fichier :
-        map_smooth /= 58.04 # Jy to Tcmb convertion FIXME
+        map_smooth /= 58.04 # MJy.s-1 to Tcmb convertion FIXME unit 
     if "857" in fichier : 
-        map_smooth /= 2.27  # Jy to Tcmb convertion FIXME
+        map_smooth /= 2.27  # MJy.s-1 to Tcmb convertion FIXME unit
 
     i = i + 1
     path_1 = "maps_smooth/"
