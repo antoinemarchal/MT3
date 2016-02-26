@@ -27,6 +27,7 @@ slct_rcrit    = []
 slct_rp       = []
 
 l = 0
+pouet = 0
 for i in range(len(redshift)):
     if redshift[i] >= 0. and MSZ[i] != 0. :
         slct_redshift.append(redshift[i])
@@ -35,10 +36,10 @@ for i in range(len(redshift)):
         slct_rcrit.append(rcrit[i])
         slct_rp.append(rp[i])
         l +=1
-        if rcrit[i] == 4 :
-            print rcrit[i]
-            plt.plot(rp[i])
-            plt.show()
+        
+        if rcrit[i] == 5 :
+            pouet = pouet + 1
+            
 n_cl = l
 print n_cl
 k = 0
