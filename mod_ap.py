@@ -175,7 +175,6 @@ def get_flux(data_circle,data_ring):
     return flux
 #######################################################
 
-
 def do_photometry(n_cluster, files, path, threshold,plot):
 
 
