@@ -96,7 +96,6 @@ def area(data_circle, data_ring):
 ###################################################################
 def radial_profile(data, center, threshold ,plot):
     #center is the center of the data patch
-    
     y, x = np.indices((data.shape))
     r = np.sqrt((x - center[0])**2 + (y - center[1])**2)
     
@@ -112,13 +111,12 @@ def radial_profile(data, center, threshold ,plot):
     mask_circle = sector_mask(mdata.shape,(x,y),30,(0,360))
     mdata[~mask_circle] = 0
     med = np.median(mdata[np.where(mdata != 0)])
-    
+
     radialprofile = (radialprofile - med) \
                     / (np.max(radialprofile) - med)
                      
     #### Calcul d'un rayon caracteristique rc :
     #### 60 % du flux en partant du centre
-	##valeur seuil a discuter...
     r_60 = np.where(radialprofile >= threshold)
     r_60 = np.asarray(r_60)
     r_60 = np.ravel(r_60)
@@ -131,12 +129,6 @@ def radial_profile(data, center, threshold ,plot):
             break
         else:
             rc = np.max(r_60)
-
-    #print rc
-    #radialprofile = radialprofile / rc
-    #radialprofile = (radialprofile - med) \
-    #                / (np.max(radialprofile) - med)
-    
 
     if plot == 1 :
         style = 'grayscale'

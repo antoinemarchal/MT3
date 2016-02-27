@@ -99,11 +99,10 @@ x = np.linspace(0,100,100)
 gauss = gaussian(x, 0., sigma)
 plt.plot(x ,gauss, 'k--', label='PSF')
 for i in range(20):
-    print i
     if nb_indexes[i] >= 10 :
    	plt.plot(med_profile[i,:], label="$R_{c} = $"+str(i-1))
 plt.plot([0,150],[0.4,0.4])
-plt.plot([0,150],[0.5,0.5])
+plt.plot([0,11.2466/2.],[0.5,0.5], 'r--')
 plt.xlabel('$R$ $[pix]$')
 plt.ylabel('$Normalized$ $Flux$')
 plt.legend(loc=1, numpoints=1)

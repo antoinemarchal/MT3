@@ -36,11 +36,10 @@ slct_rp       = []
 l = 0
 
 pouet = 0
-=======
 sigma = Gamma2sigma(11.2466)
 x = np.linspace(0,200,200)
 gauss = gaussian(x, 0., sigma)
->>>>>>> b4a0ea0f4faa2fde9822e72554fbdcf0b7d78a2a
+
 for i in range(len(redshift)):
     if redshift[i] >= 0. and MSZ[i] != 0. :
         slct_redshift.append(redshift[i])
@@ -49,17 +48,15 @@ for i in range(len(redshift)):
         slct_rcrit.append(rcrit[i])
         slct_rp.append(rp[i])
         l +=1
-
-        
             
-        if rcrit[i] == 5 :
-            fig_3   = plt.figure(figsize=(10,6))
-            ax_3    = fig_3.add_subplot(1, 1, 1)
-            ax_3.set_xlim(0, 35)
-            print rcrit[i]
-            plt.plot(rp[i])
-            plt.plot(x, gauss)
-            plt.show()
+        #if rcrit[i] == 5 :
+        #    fig_3   = plt.figure(figsize=(10,6))
+        #    ax_3    = fig_3.add_subplot(1, 1, 1)
+        #    ax_3.set_xlim(0, 35)
+        #    print rcrit[i]
+        #    plt.plot(rp[i])
+        #    plt.plot(x, gauss)
+        #    plt.show()
 n_cl = l
 print n_cl
 k = 0
@@ -70,7 +67,6 @@ rc = 0
 nb_indexes = [0]
 
 ## determination du profil type en fonction du rayon critique
-
 for k in range(np.max(slct_rcrit)) :
     indexes = np.where(ar_rc == k)
     indexes = np.asarray(indexes)
