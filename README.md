@@ -5,9 +5,9 @@ Using ILC method to extract thermal Sunyaev–Zel'dovich effect maps from Planck
 Use HFI maps (2048) of Planck mission and the PSZ2v1.fits catalog available on SZ Cluster DataBase (IAS/IDOC).
 
 ## Files to update
-> HFI_SkyMap_*.fits --> /SZ_effect/maps_2015
+> HFI_SkyMap_*.fits --> /maps_2015
 
-> PSZ2v1.fits  --> /SZ_effect
+> PSZ2v1.fits
 
 > galacticMask.fits
 
