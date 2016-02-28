@@ -19,6 +19,8 @@ parser.add_argument("n_cluster", help="Choose the number of cluster",
                     type=int)
 parser.add_argument("-p", "--plot", help="Plot results",
                     action="store_true")
+parser.add_argument("-m", "--mask", help="Compute weight of full sky map if galacticMask.fits exist",
+                    action="store_true")
 args = parser.parse_args()
 if args.n_cluster > 1653:
     print 'There are only 1653 Clusters'
@@ -71,10 +73,14 @@ unit_1.seek(origin)
    Separation of SZ and CMB componant of 
    full sky using ilc method
    -----------------------------------------------------"""
-mask = hp.read_map('galacticMask.fits')
-map_mask = []
-for i in range(6) :
-    map_mask.append(map_smooth[i] * mask)
+if args.mask:
+    sys.stdout = open(os.devnull, "w")
+    mask = hp.read_map('galacticMask.fits')
+    sys.stdout = sys.__stdout__
+    
+    map_mask = []
+    for i in range(6) :
+        map_mask.append(map_smooth[i] * mask)
     
 print 'ILC on full sky'
 f_nu          = ilc.dist_SZ(freq)
@@ -91,10 +97,12 @@ K = np.linalg.inv(J)
 WK, WT = ilc.weight(K, a, a_t, b ,b_t)
 
 # test with mask
-L = np.cov((map_mask[0], map_mask[1], map_mask[2]
-            , map_mask[3], map_mask[4], map_mask[5]))
-P = np.linalg.inv(L)
-WK_mask, WT_mask = ilc.weight(P, a, a_t, b ,b_t)
+if args.mask:
+    print 'ILC on full sky with mask'
+    L = np.cov((map_mask[0], map_mask[1], map_mask[2]
+                , map_mask[3], map_mask[4], map_mask[5]))
+    P = np.linalg.inv(L)
+    WK_mask, WT_mask = ilc.weight(P, a, a_t, b ,b_t)
 
 for i in range(n_obs) :
     CMB = CMB + (WK[i] * map_smooth[i])
@@ -183,10 +191,11 @@ if args.plot:
         GLAT_slct, GLAT_excl, st_w, st_w_excl,
         n_slct, n_excl, 'ggplot'
         )
-    inout.plot_w_full_patch(
-        w_full_sky[:,0], moy_w_slct, moy_w, std_w_slct,
-        std_w, WT, WT_mask, n_slct, 'ggplot'
-    )
+    if args.mask:
+        inout.plot_w_full_patch(
+            w_full_sky[:,0], moy_w_slct, moy_w, std_w_slct,
+            std_w, WT, WT_mask, n_slct, 'ggplot'
+        )
     
 
 
