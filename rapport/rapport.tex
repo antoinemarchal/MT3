@@ -97,18 +97,20 @@ formation des grandes structures. Son équation est donnée par :
   \frac{\Delta T_{SZE}}{T_{CMB}} = f(\nu) \times  y
 \end{align*}
 
-\begin{multicols}{2}\noindent
 \begin{align*}
   y = \int_{l.o.s} \frac{kT_e}{m_e c^2} n_e \sigma_T dl 
 \end{align*}
-\begin{align*}
-  f(\nu) = \frac{h \nu}{k T_{CMB}} \frac{\e^{x(\nu)}+1}{\e^{x(\nu)}-1} - 4
-\end{align*}
-\end{multicols}
-\fxwarning{fix x definition}
 où $k$ is est la constante Boltzmann, $m_e$ la masse des electrons, $c$
 la vitesse de la lumière, $\sigma_T$ la section efficace de Thomson, 
 $n_e$ la densité d'electrons et $T_e$ la température des electrons.
+
+\begin{align*}
+  f(\nu) = x(\nu) \frac{\e^{x(\nu)}+1}{\e^{x(\nu)}-1} - 4
+\end{align*}
+
+\begin{align*}
+  x(\nu) = \frac{h \nu}{k T_{CMB}}
+\end{align*}
 
 Deux composantes sont à distinguer, l'effet SZ thermique (TSZ)
 explicité ci-dessus, et l'effet SZ cinétique (KSZ). La deuxième composante est simplement dù à un effet
@@ -187,10 +189,8 @@ plus hautes et un désaccord pour les deux les plus basses. A basse
 fréquence l'émission synchrotron de la galaxie peut en effet induire
 ce décalage. Il n'est pas présent sur les amas du catalogue car
 beaucoup moins nombreux dans le plan de la galaxie dù simplement à un
-effet observationel. Pour confirmer cette hypothèse il serait
-intéressant de masquer la galaxie pour déterminer s'il y a bien une
-corrélati5
-on.  \fxwarning{done explain}
+effet observationel. L'application d'un masque sur le plan galactique
+nous confirme cette hypothèse. (voir Figure \ref{w_full})
 
 \begin{figure}[h!]
   \centering
@@ -199,7 +199,8 @@ on.  \fxwarning{done explain}
   \caption{Poids moyen de l'ensemble des amas du catalogue (bleu ciel) et sur
     l'ensemble des amas selectionnés (bleu foncé) en fonction
     de la fréquence. En violet sont réprésenté ces grandeurs pour
-    l'ensemble des maps Planck.}
+    l'ensemble des maps Planck. En vert, l'ensemble des maps avec
+    application d'un masque au niveau du plan galactique.}
 \end{figure}
   
 
@@ -346,5 +347,5 @@ results. XXIV \cite{Planck_SZ})
 cluster counts, Astronomy \& Astrophysics manuscript no. szcosmo 2014
 \end{thebibliography}
 
-%\listoffixmes
+\listoffixmes
 \end{document}
