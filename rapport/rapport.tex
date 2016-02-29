@@ -210,17 +210,40 @@ Pour cette procédure nous avons du définir deux objets : un cercle autour de l
 sur lequel le flux sera calculé et un anneau autour de ce cercle qui va nous servir a estimer le bruit 
 aux alentours de la source.
 
-\paragraph{Le cercle.} Pour définir le rayon du cercle, nous avons utilisé une procédure qui nous donne le
-profile radiale de la source qui nous interesse. Ce profile radiale est tracé à partir de la valeur maximale trouvé
-sur l'ama que l'on vise. Une fois ce profile normalisé, il est possible de définir un rayon critique
+\paragraph{Profil radial des sources.} Les procédures de photometrie s'appuient sur une determination 
+du profile radiale de nos sources. L'hypothese de base est que les sources sont circulaires (ce qui n'est 
+pas toujours vérifié). La procédure moyenne toutes les valeurs de pixiels equidistants du centre de l'image
+pour tracer ce profil radial. Le profil est ensuite normalisé de la facon suivante  : 
+\begin{equation}
+Pr_n(r) = \frac{Pr(r) - mediane}{\max ( Pr) - mediane}
+\end{equation} 
+Où $Pr_n(r)$ désigne le profile normalisé et $Pr(r)$ le profile brut et $mediane$ designe une valeur médiane
+calculé sur un emsemble de l'image où la source n'apparrait pas (un masque circulaire est posé sur la source).\\
+
+\paragraph{Le cercle.} Pour définir le rayon du cercle, nous avons utilisé la procédure qui nous donne le
+profile radial de la source qui nous interesse. Une fois ce profile normalisé, il est possible de définir un rayon critique
 $R_c$ qui va nour permettre de prendre en compte pour chaque source la même proportion du flux totale
 (similaire à FWMH sur le principe). Conretement nous avons placé $R_c$ là où le profile radiale vaut 40\% du maximum
 (cf \ref{profile radial}). \\ 
 
-\paragraph{L'anneau} Pour des raisons de simplicité le rayon intérieur de l'anneau 
+\paragraph{L'anneau.} Pour des raisons de simplicité le rayon intérieur de l'anneau 
 est fixé à $R_{in} = 3R_c $. Si l'on prend un rayon trop grand on risque de prendre en compte dans cette
 anneau des amas qui seraient assz proche de notre source.  le rayon externe de l'anneau est fixé à 
-$R_{out} = R_{in} + 5  $ (en pixels)
+$r_{out} = r_{in} + 5  $ (en pixels).
+
+Une fois ces deux objets définis voici la procédure que nous avons suivie pour déterminer le
+flux des sources : 
+\begin{itemize}
+\item On intègre sur le cercle pour obtenir le flux de la source.
+\item On intègre sur l'anneau et on divise par la valeur medianne pour estimer le bruit 
+aux environs de la source.
+\item On soustrait le bruit moyen  au flux de la source.
+\end{itemize}
+A la fin de cette procedure nous avons donc obtenues des valeurs de flux pour chaque source en 
+$\frac{\Delta T}{T}\times pixel $.
+
+
+
 
 \begin{figure}[h!]
   \centering
@@ -230,6 +253,7 @@ $R_{out} = R_{in} + 5  $ (en pixels)
   l'emplacement du rayon critique $R_c$ .}
 \end{figure}
 
+
 \begin{figure}[h!]
   \centering
   \label{photometrie d'ouverture}
@@ -237,6 +261,26 @@ $R_{out} = R_{in} + 5  $ (en pixels)
   \caption{Exemple de cercles et d'anneaux définis pour les procédures de photometrie d'ouverture sur une source SZ. 
   L'anneau et le cercle centrale sont stockés indépendemment afin de rendre les calculs plus rapides.}
 \end{figure}
+
+
+
+\paragraph{Discussion sur la methode.} La source majeure d'érreur que nous comettons dans cette procédure provient 
+de l'algorithme que nous utilisons pour determiner le rayon critique de nos source. Cependant par manque de temps
+ nous avons décidé de ne pas modifier cette méthode. //
+ L'algorithme se contente de prendre le dernier point du profile radiale vérifiant : 
+ \begin{equation}
+ Pr(r) \ge 0.4\times \max (Pr)
+ \end{equation}
+ Où $Pr$ désigne le profile radiale normalisé de la source. 
+Comme les valeurs de rayons critique que nous determinons ne
+peuvent prendre que des valeurs entières, il et plus probable que le rayon critique que nous determinons soit legerement inférieur au 
+rayon qui verifierait exactement : 
+\begin{equation}
+r = r_c \Leftrightarrow Pr(r_c) = 0.4\times \max (Pr)
+\end{equation}
+L'érreur que nous commetons ainsi sur la valeur de $r_c$ est de au plus 1 pixel et est asymetrique. Cette erreur 
+se repercute evidemment sur le calcul des flux. Nous n'avons malheureusement pas étudié cette repercussion de
+façon plus précise.
 
 \begin{figure}[h!]
   \centering
