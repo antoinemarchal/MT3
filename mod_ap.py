@@ -96,7 +96,6 @@ def area(data_circle, data_ring):
 ###################################################################
 def radial_profile(data, center, threshold ,plot):
     #center is the center of the data patch
-    
     y, x = np.indices((data.shape))
     r = np.sqrt((x - center[0])**2 + (y - center[1])**2)
     
@@ -108,16 +107,16 @@ def radial_profile(data, center, threshold ,plot):
     radialprofile = tbin / nr
     
     #Normalisation
+    mdata = np.copy(data)
+    mask_circle = sector_mask(mdata.shape,(x,y),30,(0,360))
+    mdata[~mask_circle] = 0
+    med = np.median(mdata[np.where(mdata != 0)])
 
-    med = np.median(data)
     radialprofile = (radialprofile - med) \
                     / (np.max(radialprofile) - med)
-
-
-                           
+                     
     #### Calcul d'un rayon caracteristique rc :
     #### 60 % du flux en partant du centre
-	##valeur seuil a discuter...
     r_60 = np.where(radialprofile >= threshold)
     r_60 = np.asarray(r_60)
     r_60 = np.ravel(r_60)
@@ -130,7 +129,6 @@ def radial_profile(data, center, threshold ,plot):
             break
         else:
             rc = np.max(r_60)
-    
 
     if plot == 1 :
         style = 'grayscale'
@@ -169,7 +167,6 @@ def get_flux(data_circle,data_ring):
     return flux
 #######################################################
 
-
 def do_photometry(n_cluster, files, path, threshold,plot):
 
 
@@ -192,24 +189,24 @@ def do_photometry(n_cluster, files, path, threshold,plot):
     	n1,n2      = data.shape
 	centre     = (n1/2,n2/2)
 
-        
+        centre_source = centre
         # centre de la source  = max(source)
         # in case there's a secondary source on the patch
         # we define  a preliminary circle around the center
         
-        preliminary_circle = np.copy(data)
-        mask = sector_mask(data.shape,centre,15,(0,360))
+        #preliminary_circle = np.copy(data)
+        #mask = sector_mask(data.shape,centre,15,(0,360))
 
         # si on met 0 ca pose pb pour la detection du
         # max 
-        preliminary_circle[~mask]= -1
+        #preliminary_circle[~mask]= -1
             
-        max_source = np.where(data == np.max(preliminary_circle))
-        max_source = np.asarray(max_source)
+        #max_source = np.where(data == np.max(preliminary_circle))
+        #max_source = np.asarray(max_source)
         
-        x_centre = np.mean(max_source[:,0])
-        y_centre = np.mean(max_source[:,1])
-        centre_source = [x_centre,y_centre]
+        #x_centre = np.mean(max_source[:,0])
+        #y_centre = np.mean(max_source[:,1])
+        #centre_source = [x_centre,y_centre]
 
         #print centre_source
 	profile,rc = radial_profile(data,centre_source,threshold,0)

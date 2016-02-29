@@ -105,7 +105,7 @@ def plot_w_glat(GLAT_slct, GLAT_excl, st_w, st_w_excl,
     return 0
 
 def  plot_w_full_patch(w_full, moy_w_slct, moy_w, std_w_slct
-                       , std_w, W2, n_slct, style):
+                       , std_w, W2, WT_mask, n_slct, style):
     #with plt.style.context(style, after_reset=True):
     freq = [103.416 ,144.903, 222.598, 355.218, 528.4, 776.582]    
     fig = plt.figure(figsize=(12,9))
@@ -115,7 +115,8 @@ def  plot_w_full_patch(w_full, moy_w_slct, moy_w, std_w_slct
     plt.errorbar(freq, moy_w_slct, marker="o", xerr=0., yerr=std_w_slct,
                  color='blue', label=str(n_slct)+'Cluster')
     #plt.plot(freq, w_full, "r:o", lw=1, label='Full sky')
-    plt.plot(freq, W2, "m:o", lw=1, label='Full sky') 
+    plt.plot(freq, W2, "m:o", lw=1, label='Full sky')
+    plt.plot(freq, WT_mask, "g:o", lw=1, label='Full sky with mask') 
     plt.plot([0, 790], [0, 0], 'g--', lw=1)
     plt.legend()
     plt.xlabel('Frequence [GHz]')

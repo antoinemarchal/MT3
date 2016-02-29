@@ -8,6 +8,13 @@ import math as ma
 import astropy.table as pytabs
 import mod_ap as ap
 import pickle
+from numpy import sqrt, log
+
+def Gamma2sigma(Gamma):
+    return Gamma / (sqrt(log(256)))
+
+def gaussian(x, mu, sig):
+    return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
 n_cluster = 1383 #Number of cluster selected
 files = "patch_SZ/SZ/reduced_filenames.txt"
@@ -27,6 +34,12 @@ slct_rcrit    = []
 slct_rp       = []
 
 l = 0
+
+pouet = 0
+sigma = Gamma2sigma(11.2466)
+x = np.linspace(0,200,200)
+gauss = gaussian(x, 0., sigma)
+
 for i in range(len(redshift)):
     if redshift[i] >= 0. and MSZ[i] != 0. :
         slct_redshift.append(redshift[i])
@@ -35,6 +48,15 @@ for i in range(len(redshift)):
         slct_rcrit.append(rcrit[i])
         slct_rp.append(rp[i])
         l +=1
+            
+        #if rcrit[i] == 5 :
+        #    fig_3   = plt.figure(figsize=(10,6))
+        #    ax_3    = fig_3.add_subplot(1, 1, 1)
+        #    ax_3.set_xlim(0, 35)
+        #    print rcrit[i]
+        #    plt.plot(rp[i])
+        #    plt.plot(x, gauss)
+        #    plt.show()
 n_cl = l
 print n_cl
 k = 0
@@ -45,13 +67,11 @@ rc = 0
 nb_indexes = [0]
 
 ## determination du profil type en fonction du rayon critique
-
-for k in range(np.max(slct_rcrit)+1) :
+for k in range(np.max(slct_rcrit)) :
     indexes = np.where(ar_rc == k)
     indexes = np.asarray(indexes)
     n1,n2 = indexes.shape
     nb_indexes = np.append(nb_indexes,n2) 
-   
     #retirer la premiere ligne a la sortie du bloc 
     if k == 0 :
         med_profile = np.zeros([1,150])
@@ -89,12 +109,13 @@ for k in range(np.max(slct_rcrit)+1) :
 
 
 #print nb_indexes
-if a = 1 : 
-    for i in range(20):
-	if nb_indexes[i] >= 10  : 
-   	    plt.plot(med_profile[i,:])
-    plt.plot([0,150],[0.4,0.4])
-    plt.show()
+#a = 0.
+#if a == 1 : 
+#    for i in range(20):
+#	if nb_indexes[i] >= 10  : 
+#   	    plt.plot(med_profile[i,:])
+#    plt.plot([0,150],[0.4,0.4])
+#    plt.show()
 
 
 """---------------------------------------------------

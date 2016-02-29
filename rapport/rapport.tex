@@ -69,7 +69,7 @@ Etude à travers l'effet \\ Sunyaev-Zel’dovich}} \\[2cm]}
 \end{abstract}
 \end{titlingpage}
 %\tableofcontents
-\thispagestyle{empty}
+%\thispagestyle{empty}
 
 \newpage
 
@@ -102,8 +102,7 @@ formation des grandes structures. Son équation est donnée par :
   y = \int_{l.o.s} \frac{kT_e}{m_e c^2} n_e \sigma_T dl 
 \end{align*}
 \begin{align*}
-  f(\nu) = \frac{h \nu}{k T_{CMB}} \frac{\e^{x(\nu) + 1}}{\e^{x(\nu)
-  -1}} - 4
+  f(\nu) = \frac{h \nu}{k T_{CMB}} \frac{\e^{x(\nu)}+1}{\e^{x(\nu)}-1} - 4
 \end{align*}
 \end{multicols}
 
@@ -124,7 +123,8 @@ Doppler additionnel.
   \caption{Etude des poids appliqués à chacune des six fréquences en
     fonction de la latitude en coordonnée galactique pour
   l'ensemble de 1653 amas du catalogue. En jaune sont représenté les
-  amas exclus qui s'écarte de plus d'un $\sigma$ de la valeur moyenne.}
+  amas exclus qui s'écarte de plus d'un $\sigma$ de la valeur moyenne
+  pour les quatres première fréquences.}
 \end{figure}
 
 L'ILC utilisé ici est basé sur l'article de Remazeilles M. \&
@@ -150,8 +150,8 @@ où $\widehat{R}$ est la matrice de covariance empirique des cartes
 observationnelles, $a = (1, 1, ..., 1)^t$ et b est le vecteur de
 l'effet SZ thermique donné par $f(\nu)$. A partir des coordonnées
 galactiques des amas de PSZ2 nous appliquons une ILC sur chaque amas
-contenu dans un patch de dimensions FIXME \fxwarning{dimension physique
-  patch} extrait au préalable de la sphère celeste de Planck par
+contenu dans un patch de $100 \times 100$ pixels, soir $214.72 '$ de
+coté extrait au préalable de la sphère celeste de Planck par
 projection tangentielle. 
 Un des résultats de l'ILC est représenté Figure \ref{sz_effect}. La
 map en température de l'effet SZ thermique est représentée sur lea
@@ -174,8 +174,9 @@ variables. Ce sont dans les deux fréqences les plus haute que le
 perturbation est la plus grande (ie. la galaxie y est le plus
 présente). Pour continuer notre analyse et effectuer de la photométrie
 d'ouverture sur les amas, nous avons décider d'exclure les amas dont
-le poids s'écarte de plus d'un $\sigma$ de la valeur moyenne, où
-$\sigma$ représente la déviation standard sur l'ensemble 1653 amas. \\
+le poids s'écarte de plus d'un $\sigma$ de la valeur moyenne (pour les
+quatres premières fréquences), où $\sigma$ représente la déviation
+standard sur l'ensemble 1653 amas. \\
 
 Nous pouvons voir sur la Figure \ref{w_full} les poids moyenné sur
 l'ensemble des amas du catalogue (bleu ciel) et sur l'ensemble des
@@ -185,13 +186,15 @@ complète de Planck. On observe un bon accord pour les 4 fréquences les
 plus hautes et un désaccord pour les deux les plus basses. A basse
 fréquence l'émission synchrotron de la galaxie peut en effet induire
 ce décalage. Il n'est pas présent sur les amas du catalogue car
-beaucoup moins nombreux dans le plan de la galaxie du simplement à un
-effet observationel. 
+beaucoup moins nombreux dans le plan de la galaxie dù simplement à un
+effet observationel. Pour confirmer cette hypothèse il serait
+intéressant de masquer la galaxie pour déterminer s'il y a bien une
+corrélation.  \fxwarning{done explain}
 
 \begin{figure}[h!]
   \centering
   \label{w_full}
-  \includegraphics[width=6in]{w_full.pdf}
+  \includegraphics[width=4in]{w_full.pdf}
   \caption{Poids moyen de l'ensemble des amas du catalogue (bleu ciel) et sur
     l'ensemble des amas selectionnés (bleu foncé) en fonction
     de la fréquence. En violet sont réprésenté ces grandeurs pour
@@ -206,15 +209,24 @@ Pour cette procédure nous avons du définir deux objets : un cercle autour de l
 sur lequel le flux sera calculé et un anneau autour de ce cercle qui va nous servir a estimer le bruit 
 aux alentours de la source.
 
-\paragraph{Le cercle.} Pour définir le rayon du cercle, nous avons utilisé une procédure qui nous donne le
-profile radiale de la source qui nous interesse. Ce profile radiale est tracé à partir de la valeur maximale trouvé
-sur l'ama que l'on vise. Une fois ce profile normalisé, il est possible de définir un rayon critique
-$r_c$ qui va nour permettre de prendre en compte pour chaque source la même proportion du flux totale
-(similaire à FWMH sur le principe). Conretement nous avons placé $r_c$ là où le profile radiale vaut 40\% du maximum
+\paragraph{Profil radial des sources.} Les procédures de photometrie s'appuient sur une determination 
+du profile radiale de nos sources. L'hypothese de base est que les sources sont circulaires (ce qui n'est 
+pas toujours vérifié). La procédure moyenne toutes les valeurs de pixiels equidistants du centre de l'image
+pour tracer ce profil radial. Le profil est ensuite normalisé de la facon suivante  : 
+\begin{equation}
+Pr_n(r) = \frac{Pr(r) - mediane}{\max ( Pr) - mediane}
+\end{equation} 
+Où $Pr_n(r)$ désigne le profile normalisé et $Pr(r)$ le profile brut et $mediane$ designe une valeur médiane
+calculé sur un emsemble de l'image où la source n'apparrait pas (un masque circulaire est posé sur la source).\\
+
+\paragraph{Le cercle.} Pour définir le rayon du cercle, nous avons utilisé la procédure qui nous donne le
+profile radial de la source qui nous interesse. Une fois ce profile normalisé, il est possible de définir un rayon critique
+$R_c$ qui va nour permettre de prendre en compte pour chaque source la même proportion du flux totale
+(similaire à FWMH sur le principe). Conretement nous avons placé $R_c$ là où le profile radiale vaut 40\% du maximum
 (cf \ref{profile radial}). \\ 
 
-\paragraph{L'anneau} Pour des raisons de simplicité le rayon intérieur de l'anneau 
-est fixé à $r_{in} = 3r_c $. Si l'on prend un rayon trop grand on risque de prendre en compte dans cette
+\paragraph{L'anneau.} Pour des raisons de simplicité le rayon intérieur de l'anneau 
+est fixé à $R_{in} = 3R_c $. Si l'on prend un rayon trop grand on risque de prendre en compte dans cette
 anneau des amas qui seraient assz proche de notre source.  le rayon externe de l'anneau est fixé à 
 $r_{out} = r_{in} + 5  $ (en pixels).
 
@@ -230,13 +242,17 @@ A la fin de cette procedure nous avons donc obtenues des valeurs de flux pour ch
 $\frac{\Delta T}{T}\times pixel $.
 
 
+
+
 \begin{figure}[h!]
   \centering
   \label{profile radial}
   \includegraphics[scale = 0.5]{profile_radiale_ama.pdf}
   \caption{Exemple de profile radiale normalisé tracé pour une source SZ. La Ligne pointillé rouge montre 
-  l'emplacement du rayon critique $rc$ .}
+  l'emplacement du rayon critique $R_c$ .}
 \end{figure}
+
+
 \begin{figure}[h!]
   \centering
   \label{photometrie d'ouverture}
@@ -246,6 +262,7 @@ $\frac{\Delta T}{T}\times pixel $.
 \end{figure}
 
 
+
 \paragraph{Discussion sur la methode.} La source majeure d'érreur que nous comettons dans cette procédure provient 
 de l'algorithme que nous utilisons pour determiner le rayon critique de nos source. Cependant par manque de temps
  nous avons décidé de ne pas modifier cette méthode. //
@@ -253,17 +270,67 @@ de l'algorithme que nous utilisons pour determiner le rayon critique de nos sour
  \begin{equation}
  Pr(r) \ge 0.4\times \max (Pr)
  \end{equation}
- Où $Pr$ désigne le profile radiale de la source. 
+ Où $Pr$ désigne le profile radiale normalisé de la source. 
 Comme les valeurs de rayons critique que nous determinons ne
 peuvent prendre que des valeurs entières, il et plus probable que le rayon critique que nous determinons soit legerement inférieur au 
 rayon qui verifierait exactement : 
 \begin{equation}
 r = r_c \Leftrightarrow Pr(r_c) = 0.4\times \max (Pr)
 \end{equation}
-L'érreur que nous commetons ainsi sur la valeur de $r_c$ est de au plus 1 pixel et est asymetrique.
+L'érreur que nous commetons ainsi sur la valeur de $r_c$ est de au plus 1 pixel et est asymetrique. Cette erreur 
+se repercute evidemment sur le calcul des flux. Nous n'avons malheureusement pas étudié cette repercussion de
+façon plus précise.
+
+\begin{figure}[h!]
+  \centering
+  \label{radius}
+  \includegraphics[scale = 0.5]{radius.pdf}
+  \caption{}
+\end{figure}
 
 \section{Résultats et discussion}
 
+\begin{figure}[h!]
+  \centering
+  \label{rslt_1}
+  \includegraphics[scale = 0.4]{rslt_1.pdf}
+  \caption{En haut à gauche est réprésenté le flux de chaque amas
+    selectionné en fonction de son redshift. En haut à droite, le rayon critique
+    $R_c$ en fonction du redshift. En bas à gauche l'histogramme des
+    redshifts. En bas à droite les histogrammes des flux pour les amas
+    dont on connait le redshift (vert) et pour la totalité des amas
+    selectionnés au préalable : i.e latitude (bleu).}
+\end{figure}
+
+Les résultats de la photométrie d'ouverture effectué sur les amas
+selectionnés au préalable sont présenté Figure
+\ref{rslt_1}. L'histogramme des redshifts associés au amas du
+catalogue ne montre pas une distribution uniforme. Il y a plus
+d'amas detecté à bas redshift qu'à haut redshift. Cela ne devrait
+théoriquement pas se produire car pour une masse donnée, le flux SZ
+est indépendant du redshift. Ces observations peuvent s'expliquer par
+le fait que lorsque le diamètre angulaire de l'amas observé est trop
+petit, son effet SZ il est totalement dilué par le bim de
+l'instrument. On voit donc moins d'amas à haut redshift en raison des
+contraintes observationelles de l'instrument Planck. L'évolution de
+$R_c$ nous montre en effet une limite qui semble atteindre $5$ pixel,
+soit environ $4.3'$. Nous distinguons néanmoins que $R_c$ décroit avec
+le redshift, ce qui semble réaliste avec le modèle hiérarchique de
+formation des structures. \\
+
+La suite logique de cette étude serait de comparer, en prenant en
+compte que le comptage est biaisé, le nombre d'amas par intervals de
+redshifts  et par intervals de signal sur bruit pour contraindre le modèle
+théorique actuel de formation des grandes stuctures et plus
+directement certains paramètres cosmologiques comme $\sigma_8$ qui
+représente l'amplitude des fluctuations primordiales
+\fxwarning{définition sigma8}. \\
+
+C'est ce que la collaboration Planck a étudié (voir Planck 2015
+results. XXIV \cite{Planck_SZ}) 
+\fxwarning{lire résumer}
+
+\newpage
 \begin{thebibliography}{2}
   \addcontentsline{toc}{chapter}{Bibliographie} 
 
@@ -273,8 +340,10 @@ L'érreur que nous commetons ainsi sur la valeur de $r_c$ est de au plus 1 pixel
 \bibitem{Remazeilles}Remazeilles M. \& al., CMB and SZ effect
   separation with Constrained Internal Linear Combinations, 
   Mon. Not. R. Astron. Soc. 410, 2481–2487 (2011)  \\
-  
-\end{thebibliography}
-\listoffixmes
-\end{document}
 
+\bibitem{Planck_SZ} Planck 2015 results. XXIV. Cosmology from Sunyaev-Zeldovich
+cluster counts, Astronomy \& Astrophysics manuscript no. szcosmo 2014
+\end{thebibliography}
+
+%\listoffixmes
+\end{document}
