@@ -216,7 +216,19 @@ $r_c$ qui va nour permettre de prendre en compte pour chaque source la même pro
 \paragraph{L'anneau} Pour des raisons de simplicité le rayon intérieur de l'anneau 
 est fixé à $r_{in} = 3r_c $. Si l'on prend un rayon trop grand on risque de prendre en compte dans cette
 anneau des amas qui seraient assz proche de notre source.  le rayon externe de l'anneau est fixé à 
-$r_{out} = r_{in} + 5  $ (en pixels)
+$r_{out} = r_{in} + 5  $ (en pixels).
+
+Une fois ces deux objets définis voici la procédure que nous avons suivie pour déterminer le
+flux des sources : 
+\begin{itemize}
+\item On intègre sur le cercle pour obtenir le flux de la source.
+\item On intègre sur l'anneau et on divise par la valeur medianne pour estimer le bruit 
+aux environs de la source.
+\item On soustrait le bruit moyen  au flux de la source.
+\end{itemize}
+A la fin de cette procedure nous avons donc obtenues des valeurs de flux pour chaque source en 
+$\frac{\Delta T}{T}\times pixel $.
+
 
 \begin{figure}[h!]
   \centering
@@ -225,10 +237,6 @@ $r_{out} = r_{in} + 5  $ (en pixels)
   \caption{Exemple de profile radiale normalisé tracé pour une source SZ. La Ligne pointillé rouge montre 
   l'emplacement du rayon critique $rc$ .}
 \end{figure}
-
-\section{Résultats et discussion}
-
-
 \begin{figure}[h!]
   \centering
   \label{photometrie d'ouverture}
@@ -236,6 +244,23 @@ $r_{out} = r_{in} + 5  $ (en pixels)
   \caption{Exemple de cercles et d'anneaux définis pour les procédures de photometrie d'ouverture sur une source SZ. 
   L'anneau et le cercle centrale sont stockés indépendemment afin de rendre les calculs plus rapides.}
 \end{figure}
+
+
+\paragraph{Discussion sur la methode.} La source majeure d'érreur que nous comettons dans cette procédure provient 
+de l'algorithme que nous utilisons pour determiner le rayon critique de nos source. Cependant par manque de temps
+ nous avons décidé de ne pas modifier cette méthode. //
+ L'algorithme se contente de prendre le dernier point du profile radiale vérifiant : 
+ \begin{equation}
+ Pr(r) \ge 0.4\times \max (Pr)
+ \end{equation}
+ Où $Pr$ désigne le profile radiale de la source. 
+Comme les valeurs de rayons critique que nous determinons ne
+peuvent prendre que des valeurs entières, il et plus probable que le rayon critique que nous determinons soit legerement inférieur au 
+rayon qui verifierait exactement : 
+\begin{equation}
+r = r_c \Leftrightarrow Pr(r_c) = 0.4\times \max (Pr)
+\end{equation}
+L'érreur que nous commetons ainsi sur la valeur de $r_c$ est de au plus 1 pixel et est asymetrique.
 
 \section{Résultats et discussion}
 
