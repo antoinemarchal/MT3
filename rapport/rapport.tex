@@ -62,7 +62,7 @@ Etude à travers l'effet \\ Sunyaev-Zel’dovich}} \\[2cm]}
   CMB et de l'effet SZ thermique pour chaque amas. 
   L'étude des poids $w(\nu)$ donnés aux six fréquences des 
   maps de Planck nous apportent une vision sur les différents
-  phénomènes physique pouvant intervenir dans l'extraction de ces données. Enfin,
+  phénomènes physiques pouvant intervenir dans l'extraction de ces données. Enfin,
   l'application d'une photométrie d'ouverture nous a ensuite permis 
   d'étudier quelques propriétés de ces amas comme le flux $F=f(z)$ 
   ou encore le rayon critique photométrique $R_{60}=f(z)$.
@@ -85,9 +85,9 @@ Etude à travers l'effet \\ Sunyaev-Zel’dovich}} \\[2cm]}
 \end{figure}
 
 L'effet Sunyaev-Zel’dovich \cite{Sunyaev} est provoqué par la diffusion Compton
-Inverse des photons du CMB par le gaz d'électrons chaud ($k_B T_e
+Inverse des photons du CMB par le gaz d'électrons chauds ($k_B T_e
 \lesssim 15$ KeV) présent dans les amas de galaxies. Son application à
-la cosmologie est capitale puisqu'il est de part sa nature
+la cosmologie est capitale puisqu'il est, de part sa nature, 
 théoriquement indépendant du redshift. Il permet donc l'étude de la
 distribution des amas qui est un enjeux important dans la
 compréhension du modèle standard de la cosmologie et notamment de la
@@ -105,13 +105,13 @@ formation des grandes structures. Son équation est donnée par :
   f(\nu) = \frac{h \nu}{k T_{CMB}} \frac{\e^{x(\nu)}+1}{\e^{x(\nu)}-1} - 4
 \end{align*}
 \end{multicols}
-
+\fxwarning{fix x definition}
 où $k$ is est la constante Boltzmann, $m_e$ la masse des electrons, $c$
 la vitesse de la lumière, $\sigma_T$ la section efficace de Thomson, 
 $n_e$ la densité d'electrons et $T_e$ la température des electrons.
 
-Deux composantes sont à distinguer, l'effet SZ thermique (TSZ) et
-l'effet SZ cinétique (KSZ). La deuxième composante est simplement dù à un effet
+Deux composantes sont à distinguer, l'effet SZ thermique (TSZ)
+explicité ci-dessus, et l'effet SZ cinétique (KSZ). La deuxième composante est simplement dù à un effet
 Doppler additionnel. 
 
 \section{Application de la méthode ILC}
@@ -129,7 +129,7 @@ Doppler additionnel.
 
 L'ILC utilisé ici est basé sur l'article de Remazeilles M. \&
 al. \cite{Remazeilles}. Cette méthode nous permet d'obtenir  une
-estimation indépendante du CMB et de l'effet SZ. L'estimateur
+estimation indépendante, du CMB et de l'effet SZ. L'estimateur
 permettant la variance minimum est donné par la combinaison linéaire: 
 
 \begin{align*}
@@ -154,8 +154,8 @@ contenu dans un patch de $100 \times 100$ pixels, soir $214.72 '$ de
 coté extrait au préalable de la sphère celeste de Planck par
 projection tangentielle. 
 Un des résultats de l'ILC est représenté Figure \ref{sz_effect}. La
-map en température de l'effet SZ thermique est représentée sur lea
-partie gauche et le CMB sur la partie droite. Il est intéressant de
+map en température de l'effet SZ thermique est représentée sur la
+partie gauche et le CMB+KSZ sur la partie droite. Il est intéressant de
 constater qu'actuellement l'effet SZ cinétique est indiscernable du
 CMB par cette méthode.  
 Ce qui va nous interesser par la suite est l'étude du comportement des
@@ -168,19 +168,19 @@ rayonnement de freinage, la galaxie et les poussières, ou encore le bruit du
 détecteur.  \\
 
 La Figure \ref{w_lat} nous montre, pour chaque fréquence, le poids
-des amas du catalogue en fontion de la latitude donnée en coordonnées
+des amas du catalogue en fontion de la latitude, donnée en coordonnées
 galactiques. On distingue bien une corélation entre ces deux
 variables. Ce sont dans les deux fréqences les plus haute que le
 perturbation est la plus grande (ie. la galaxie y est le plus
 présente). Pour continuer notre analyse et effectuer de la photométrie
-d'ouverture sur les amas, nous avons décider d'exclure les amas dont
+d'ouverture sur les amas, nous avons décidé d'exclure les amas dont
 le poids s'écarte de plus d'un $\sigma$ de la valeur moyenne (pour les
 quatres premières fréquences), où $\sigma$ représente la déviation
 standard sur l'ensemble 1653 amas. \\
 
 Nous pouvons voir sur la Figure \ref{w_full} les poids moyenné sur
 l'ensemble des amas du catalogue (bleu ciel) et sur l'ensemble des
-amas selectionné (bleu foncé) en fonction de la fréquence. De plus
+amas selectionné (bleu foncé), en fonction de la fréquence. De plus
 nous représentons les mêmes grandeurs calculer pour chacune des maps
 complète de Planck. On observe un bon accord pour les 4 fréquences les
 plus hautes et un désaccord pour les deux les plus basses. A basse
@@ -189,7 +189,8 @@ ce décalage. Il n'est pas présent sur les amas du catalogue car
 beaucoup moins nombreux dans le plan de la galaxie dù simplement à un
 effet observationel. Pour confirmer cette hypothèse il serait
 intéressant de masquer la galaxie pour déterminer s'il y a bien une
-corrélation.  \fxwarning{done explain}
+corrélati5
+on.  \fxwarning{done explain}
 
 \begin{figure}[h!]
   \centering
@@ -258,18 +259,18 @@ $R_{out} = R_{in} + 5  $ (en pixels)
     selectionnés au préalable : i.e latitude (bleu).}
 \end{figure}
 
-Les résultats de la photométrie d'ouverture effectué sur les amas
-selectionnés au préalable sont présenté Figure
+Les résultats de la photométrie d'ouverture effectués sur les amas
+selectionnés au préalable sont présentés Figure
 \ref{rslt_1}. L'histogramme des redshifts associés au amas du
 catalogue ne montre pas une distribution uniforme. Il y a plus
 d'amas detecté à bas redshift qu'à haut redshift. Cela ne devrait
 théoriquement pas se produire car pour une masse donnée, le flux SZ
 est indépendant du redshift. Ces observations peuvent s'expliquer par
 le fait que lorsque le diamètre angulaire de l'amas observé est trop
-petit, son effet SZ il est totalement dilué par le bim de
+petit, son effet SZ est totalement dilué par le bim de
 l'instrument. On voit donc moins d'amas à haut redshift en raison des
 contraintes observationelles de l'instrument Planck. L'évolution de
-$R_c$ nous montre en effet une limite qui semble atteindre $5$ pixel,
+$R_c$ nous montre en effet une limite qui semble être atteinte pour $5$ pixel,
 soit environ $4.3'$. Nous distinguons néanmoins que $R_c$ décroit avec
 le redshift, ce qui semble réaliste avec le modèle hiérarchique de
 formation des structures. \\
@@ -279,8 +280,8 @@ compte que le comptage est biaisé, le nombre d'amas par intervals de
 redshifts  et par intervals de signal sur bruit pour contraindre le modèle
 théorique actuel de formation des grandes stuctures et plus
 directement certains paramètres cosmologiques comme $\sigma_8$ qui
-représente l'amplitude des fluctuations primordiales
-\fxwarning{définition sigma8}. \\
+représente l'amplitude des fluctuations primordiales.
+\fxwarning{définition sigma8} \\
 
 C'est ce que la collaboration Planck a étudié (voir Planck 2015
 results. XXIV \cite{Planck_SZ}) 
