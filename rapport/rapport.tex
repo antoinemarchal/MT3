@@ -283,14 +283,34 @@ L'érreur que nous commetons ainsi sur la valeur de $r_c$ est de au plus 1 pixel
 se repercute evidemment sur le calcul des flux. Nous n'avons malheureusement pas étudié cette repercussion de
 façon plus précise.
 
-\begin{figure}[h!]
-  \centering
-  \label{radius}
-  \includegraphics[scale = 0.5]{radius.pdf}
-  \caption{}
-\end{figure}
+
 
 \section{Résultats et discussion}
+Une fois tours les profils de source récuppérés, il est possible de determiner un profil typique de sources
+en fonction de leur rayon critique (cf Fig. \ref{profils_medians}). On peut voir en pointillé une estimation de 
+la PSF : profil gaussien avec une largeur à mi-hauter déterminée à partir de la carte de planck 
+avec la résolution la moin bonne. On voit sur cette figure que le profil médian correspondant à 
+$r_c = 5 $ est en dessous de la PSF. \\
+Une explication possible est qu'il y ait un exces de bruit positif à proximité de la source qui nous intéresse.
+Cela aurait pour effet de diminuer la valeur du rayon critique de la source et potentiellement faire passer 
+le profil en-dessous de la PSF. Le fait que l'on observe sur le graphe une bosse négative semble être en faveur
+de cet idée.//
+Pour résoudre ce problème il serait envisageable d'ajuster une gaussienne (avec deux
+paramètres : off-set et largeur à mi-hauteur ) sur une section du profil radial que l'on sait n'etre
+pas contaminé par le bruit (près du centre du profil). Il faut ensuite replacer cette gaussienne de façon à ce que les queues de
+la gaussiene soient au niveau de  0  et refaire tourner l'algorithme qui determine le rayon critique
+sur ce nouveau profil. On devrait normalement récupérer une valeur plus élevée de $r_c$.
+
+Il serait également intéressant de savoir si la forme des profils obtenus est universelle. En pratique, pour notre
+étude, cela consisterait à ramener touts nos profils à un même rayon.
+
+\begin{figure}[h!]
+  \centering
+  \label{profils_medians}
+  \label{radius}
+  \includegraphics[scale = 0.5]{radius.pdf}
+  \caption{Profil typique de sources, médianné sur toutes les sources possédant le même rayon critique}
+\end{figure}
 
 \begin{figure}[h!]
   \centering
