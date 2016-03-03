@@ -20,7 +20,7 @@ We select the clusters based on the weight/latitude function and we save *.fits 
 (see report for details)
 
 > Run apert_phot.py -- 
-to applied aperture photometry on the extracted patchs and compute the radial profiles and flux of each cluster.
+to apply aperture photometry on the extracted patchs and compute the radial profiles and flux of each cluster.
 The different plots are saved in the /results directory.
     
     
