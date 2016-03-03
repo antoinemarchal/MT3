@@ -65,7 +65,7 @@ Etude à travers l'effet \\ Sunyaev-Zel’dovich}} \\[2cm]}
   phénomènes physiques pouvant intervenir dans l'extraction de ces données. Enfin,
   l'application d'une photométrie d'ouverture nous a ensuite permis 
   d'étudier quelques propriétés de ces amas comme le flux $F=f(z)$ 
-  ou encore le rayon critique photométrique $R_{60}=f(z)$.
+  ou encore le rayon critique photométrique $R_{c}=f(z)$.
 \end{abstract}
 \end{titlingpage}
 %\tableofcontents
@@ -162,16 +162,16 @@ constater qu'actuellement l'effet SZ cinétique est indiscernable du
 CMB par cette méthode.  
 Ce qui va nous interesser par la suite est l'étude du comportement des
 poids appliqués à chaque fréquence. En effet le calcul présenté
-équation \eqref{eq::w} est fonction de la matrice de corélation $R$ entre
+équation \eqref{eq::w} est fonction de la matrice de corrélation $R$ entre
 les six cartes de fréquences. Cependant, $R$ peut être plus ou moins affecté par
-différents effets (citués à des fréquences voisines de celles de l'effet SZ et
+différents effets (situés à des fréquences voisines de celles de l'effet SZ et
 du CMB) présent en avant plan : le rayonnement synchrotron et le
 rayonnement de freinage, la galaxie et les poussières, ou encore le bruit du
 détecteur.  \\
 
 La Figure \ref{w_lat} nous montre, pour chaque fréquence, le poids
 des amas du catalogue en fontion de la latitude, donnée en coordonnées
-galactiques. On distingue bien une corélation entre ces deux
+galactiques. On distingue bien une corrélation entre ces deux
 variables. Ce sont dans les deux fréqences les plus haute que le
 perturbation est la plus grande (ie. la galaxie y est le plus
 présente). Pour continuer notre analyse et effectuer de la photométrie
@@ -182,8 +182,8 @@ standard sur l'ensemble 1653 amas. \\
 
 Nous pouvons voir sur la Figure \ref{w_full} les poids moyenné sur
 l'ensemble des amas du catalogue (bleu ciel) et sur l'ensemble des
-amas selectionné (bleu foncé), en fonction de la fréquence. De plus
-nous représentons les mêmes grandeurs calculer pour chacune des maps
+amas selectionnés (bleu foncé), en fonction de la fréquence. De plus
+nous représentons les mêmes grandeurs calculées pour chacune des maps
 complète de Planck. On observe un bon accord pour les 4 fréquences les
 plus hautes et un désaccord pour les deux les plus basses. A basse
 fréquence l'émission synchrotron de la galaxie peut en effet induire
@@ -198,7 +198,7 @@ nous confirme cette hypothèse. (voir Figure \ref{w_full})
   \includegraphics[width=4in]{w_full.pdf}
   \caption{Poids moyen de l'ensemble des amas du catalogue (bleu ciel) et sur
     l'ensemble des amas selectionnés (bleu foncé) en fonction
-    de la fréquence. En violet sont réprésenté ces grandeurs pour
+    de la fréquence. En violet sont réprésentées ces grandeurs pour
     l'ensemble des maps Planck. En vert, l'ensemble des maps avec
     application d'un masque au niveau du plan galactique.}
 \end{figure}
@@ -207,29 +207,29 @@ nous confirme cette hypothèse. (voir Figure \ref{w_full})
 \section{Photémétrie d'ouverture}
 La photometrie d'ouverture est un traitement assez basique qui va nous 
 permettre de comparer les flux de nos sources entre eux.
-Pour cette procédure nous avons du définir deux objets : un cercle autour de la source SZ
+Pour cette procédure nous avons dû définir deux objets : un cercle autour de la source SZ
 sur lequel le flux sera calculé et un anneau autour de ce cercle qui va nous servir a estimer le bruit 
 aux alentours de la source.
 
 \paragraph{Profil radial des sources.} Les procédures de photometrie s'appuient sur une determination 
-du profile radiale de nos sources. L'hypothese de base est que les sources sont circulaires (ce qui n'est 
+du profil radial de nos sources. L'hypothese de base est que les sources sont circulaires (ce qui n'est 
 pas toujours vérifié). La procédure moyenne toutes les valeurs de pixiels equidistants du centre de l'image
 pour tracer ce profil radial. Le profil est ensuite normalisé de la facon suivante  : 
 \begin{equation}
 Pr_n(r) = \frac{Pr(r) - mediane}{\max ( Pr) - mediane}
 \end{equation} 
-Où $Pr_n(r)$ désigne le profile normalisé et $Pr(r)$ le profile brut et $mediane$ designe une valeur médiane
-calculé sur un emsemble de l'image où la source n'apparrait pas (un masque circulaire est posé sur la source).\\
+Où $Pr_n(r)$ désigne le profil normalisé et $Pr(r)$ le profil brut et $mediane$ designe une valeur médiane
+calculée sur un emsemble de l'image où la source n'apparrait pas (un masque circulaire est posé sur la source).\\
 
 \paragraph{Le cercle.} Pour définir le rayon du cercle, nous avons utilisé la procédure qui nous donne le
-profile radial de la source qui nous interesse. Une fois ce profile normalisé, il est possible de définir un rayon critique
-$R_c$ qui va nour permettre de prendre en compte pour chaque source la même proportion du flux totale
-(similaire à FWMH sur le principe). Conretement nous avons placé $R_c$ là où le profile radiale vaut 40\% du maximum
+profil radial de la source qui nous interesse. Une fois ce profil normalisé, il est possible de définir un rayon critique
+$R_c$ qui va nour permettre de prendre en compte pour chaque source la même proportion du flux total
+(similaire à FWMH sur le principe). Concrètement nous avons placé $R_c$ là où le profil radial vaut 40\% du maximum
 (cf \ref{profile radial}). \\ 
 
 \paragraph{L'anneau.} Pour des raisons de simplicité le rayon intérieur de l'anneau 
-est fixé à $R_{in} = 3R_c $. Si l'on prend un rayon trop grand on risque de prendre en compte dans cette
-anneau des amas qui seraient assz proche de notre source.  le rayon externe de l'anneau est fixé à 
+est fixé à $R_{in} = 3R_c $. Si l'on prend un rayon trop grand on risque de prendre en compte dans cet
+anneau des amas qui seraient assez proche de notre source.  le rayon externe de l'anneau est fixé à 
 $r_{out} = r_{in} + 5  $ (en pixels).
 
 Une fois ces deux objets définis voici la procédure que nous avons suivie pour déterminer le
@@ -240,7 +240,7 @@ flux des sources :
 aux environs de la source.
 \item On soustrait le bruit moyen  au flux de la source.
 \end{itemize}
-A la fin de cette procedure nous avons donc obtenues des valeurs de flux pour chaque source en 
+A la fin de cette procédure nous avons donc obtenu des valeurs de flux pour chaque source en 
 $\frac{\Delta T}{T}\times pixel $.
 
 
@@ -250,7 +250,7 @@ $\frac{\Delta T}{T}\times pixel $.
   \centering
   \label{profile radial}
   \includegraphics[scale = 0.5]{profile_radiale_ama.pdf}
-  \caption{Exemple de profile radiale normalisé tracé pour une source SZ. La Ligne pointillé rouge montre 
+  \caption{Exemple de profil radial normalisé, tracé pour une source SZ. La Ligne pointillé rouge montre 
   l'emplacement du rayon critique $R_c$ .}
 \end{figure}
 
@@ -260,45 +260,45 @@ $\frac{\Delta T}{T}\times pixel $.
   \label{photometrie d'ouverture}
   \includegraphics[scale = 0.8]{exemple_photometrie_d'ouverture.pdf}
   \caption{Exemple de cercles et d'anneaux définis pour les procédures de photometrie d'ouverture sur une source SZ. 
-  L'anneau et le cercle centrale sont stockés indépendemment afin de rendre les calculs plus rapides.}
+  L'anneau et le cercle central sont stockés indépendemment afin de rendre les calculs plus rapides.}
 \end{figure}
 
 
 
-\paragraph{Discussion sur la methode.} La source majeure d'érreur que nous comettons dans cette procédure provient 
+\paragraph{Discussion sur la methode.} La source majeure d'erreur que nous commettons dans cette procédure provient 
 de l'algorithme que nous utilisons pour determiner le rayon critique de nos source. Cependant par manque de temps
- nous avons décidé de ne pas modifier cette méthode. //
- L'algorithme se contente de prendre le dernier point du profile radiale vérifiant : 
+ nous avons décidé de ne pas modifier cette méthode. \\
+ L'algorithme se contente de prendre le dernier point du profil radial vérifiant : 
  \begin{equation}
  Pr(r) \ge 0.4\times \max (Pr)
  \end{equation}
- Où $Pr$ désigne le profile radiale normalisé de la source. 
-Comme les valeurs de rayons critique que nous determinons ne
-peuvent prendre que des valeurs entières, il et plus probable que le rayon critique que nous determinons soit legerement inférieur au 
+ Où $Pr$ désigne le profil radial normalisé de la source. 
+Comme les valeurs de rayons critiques que nous determinons ne
+peuvent prendre que des valeurs entières, il est plus probable que le rayon critique que nous determinons soit légèrement inférieur au 
 rayon qui verifierait exactement : 
 \begin{equation}
 r = r_c \Leftrightarrow Pr(r_c) = 0.4\times \max (Pr)
 \end{equation}
-L'érreur que nous commetons ainsi sur la valeur de $r_c$ est de au plus 1 pixel et est asymetrique. Cette erreur 
-se repercute evidemment sur le calcul des flux. Nous n'avons malheureusement pas étudié cette repercussion de
+L'erreur que nous commetons ainsi sur la valeur de $r_c$ est de au plus 1 pixel et est asymetrique. Cette erreur 
+se répercute evidemment sur le calcul des flux. Nous n'avons malheureusement pas étudié cette répercussion de
 façon plus précise.
 
 
 
 \section{Résultats et discussion}
-Une fois tours les profils de source récuppérés, il est possible de determiner un profil typique de sources
+Une fois tous les profils de source récupérés, il est possible de determiner un profil typique de source
 en fonction de leur rayon critique (cf Fig. \ref{profils_medians}). On peut voir en pointillé une estimation de 
-la PSF : profil gaussien avec une largeur à mi-hauter déterminée à partir de la carte de planck 
-avec la résolution la moin bonne. On voit sur cette figure que le profil médian correspondant à 
+la PSF : profil gaussien avec une largeur à mi-hauteur, déterminée à partir de la carte de Planck 
+avec la résolution la moins bonne. On voit sur cette figure que le profil médian correspondant à 
 $r_c = 5 $ est en dessous de la PSF. \\
-Une explication possible est qu'il y ait un exces de bruit positif à proximité de la source qui nous intéresse.
+Une explication possible est qu'il y ait un excès de bruit positif à proximité de la source qui nous intéresse.
 Cela aurait pour effet de diminuer la valeur du rayon critique de la source et potentiellement faire passer 
 le profil en-dessous de la PSF. Le fait que l'on observe sur le graphe une bosse négative semble être en faveur
-de cet idée.//
+de cette idée. \\
 Pour résoudre ce problème il serait envisageable d'ajuster une gaussienne (avec deux
-paramètres : off-set et largeur à mi-hauteur ) sur une section du profil radial que l'on sait n'etre
+paramètres : off-set et largeur à mi-hauteur ) sur une section du profil radial que l'on sait n'être
 pas contaminé par le bruit (près du centre du profil). Il faut ensuite replacer cette gaussienne de façon à ce que les queues de
-la gaussiene soient au niveau de  0  et refaire tourner l'algorithme qui determine le rayon critique
+la gaussienne soient au niveau de 0 et refaire tourner l'algorithme qui determine le rayon critique
 sur ce nouveau profil. On devrait normalement récupérer une valeur plus élevée de $r_c$.
 
 Il serait également intéressant de savoir si la forme des profils obtenus est universelle. En pratique, pour notre
@@ -324,11 +324,11 @@ Il serait également intéressant de savoir si la forme des profils obtenus est 
     selectionnés au préalable : i.e latitude (bleu).}
 \end{figure}
 
-Les résultats de la photométrie d'ouverture effectués sur les amas
+Les résultats de la photométrie d'ouverture effectuée sur les amas
 selectionnés au préalable sont présentés Figure
 \ref{rslt_1}. L'histogramme des redshifts associés au amas du
 catalogue ne montre pas une distribution uniforme. Il y a plus
-d'amas detecté à bas redshift qu'à haut redshift. Cela ne devrait
+d'amas détecté à bas redshift qu'à haut redshift. Cela ne devrait
 théoriquement pas se produire car pour une masse donnée, le flux SZ
 est indépendant du redshift. Ces observations peuvent s'expliquer par
 le fait que lorsque le diamètre angulaire de l'amas observé est trop
@@ -344,13 +344,9 @@ La suite logique de cette étude serait de comparer, en prenant en
 compte que le comptage est biaisé, le nombre d'amas par intervals de
 redshifts  et par intervals de signal sur bruit pour contraindre le modèle
 théorique actuel de formation des grandes stuctures et plus
-directement certains paramètres cosmologiques comme $\sigma_8$ qui
-représente l'amplitude des fluctuations primordiales.
-\fxwarning{définition sigma8} \\
-
-C'est ce que la collaboration Planck a étudié (voir Planck 2015
+directement certains paramètres cosmologiques. C'est ce que la
+collaboration Planck a étudié (voir Planck 2015
 results. XXIV \cite{Planck_SZ}) 
-\fxwarning{lire résumer}
 
 \newpage
 \begin{thebibliography}{2}
@@ -367,5 +363,5 @@ results. XXIV \cite{Planck_SZ})
 cluster counts, Astronomy \& Astrophysics manuscript no. szcosmo 2014
 \end{thebibliography}
 
-\listoffixmes
+%\listoffixmes
 \end{document}
